@@ -486,7 +486,7 @@ function recalc(){
   let tot=0;
   document.querySelectorAll('#tbody tr').forEach(tr=>{
     const ins=tr.querySelectorAll('input');
-    const mg=parseFloat(ins[1]?.value)||0,pkg=parseFloat(ins[2]?.value)||0;
+    const mg=parseFloat(ins[0]?.value)||0,pkg=parseFloat(ins[1]?.value)||0;
     const s=(mg/1000000)*pkg;tot+=s;
     const id=tr.id;
     const sv=document.getElementById('sv-'+id),su=document.getElementById('su-'+id);
