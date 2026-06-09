@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASAP Nutrition — Proposal Builder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── DESIGN TOKENS — change these to restyle everything ─────────────────
+   Edit the values below to customize colors, radius, fonts             */
+:root{
+  --brand:        #6B3FA0;   /* main accent / purple */
+  --brand-dark:   #4E2D7A;   /* hover state */
+  --brand-light:  #F4EFF9;   /* tint background */
+  --hero-bg:      #F4EFF9;   /* hero section background  ← was black */
+  --hero-text:    #1A1A1A;   /* hero heading color */
+  --hero-sub:     #6B7280;   /* hero subtext */
+  --card-bg:      #FFFFFF;
+  --page-bg:      #F2F2F7;
+  --border:       #E5E7EB;
+  --text:         #111111;
+  --text-muted:   #6B7280;
+  --text-hint:    #9CA3AF;
+  --green:        #16A34A;
+  --green-bg:     #F0FDF4;
+  --radius-card:  14px;
+  --radius-btn:   9px;
+  --radius-hero:  20px;
+}
+
+body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+/* TOOLBAR */
+.toolbar{background:#fff;border-bottom:1px solid var(--border);padding:11px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-dot{width:30px;height:30px;background:var(--brand);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800}
+.tb-name{font-size:14px;font-weight:600}
+.tb-sub{font-size:12px;color:var(--text-hint);margin-left:4px}
+.tb-actions{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-btn);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-ghost{background:#fff;border:1.5px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.btn-brand{background:var(--brand);color:#fff}
+.btn-brand:hover{background:var(--brand-dark)}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+
+/* PAGE */
+.page{max-width:860px;margin:28px auto;padding:0 20px 60px}
+
+/* ── HERO ────────────────────────────────────────────────────────────────
+   Two-column: left = editable proposal info, right = specs table       */
+.hero{background:var(--hero-bg);border-radius:var(--radius-hero);border:1px solid var(--brand-light);padding:28px 32px;margin-bottom:24px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start}
+
+/* LEFT: editable fields */
+.hero-left{}
+.hero-eyebrow{font-size:10px;font-weight:700;color:var(--brand);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.hero-title-row{display:flex;align-items:baseline;gap:0;margin-bottom:10px;flex-wrap:wrap}
+.hero-title-row .label{font-size:11px;font-weight:600;color:var(--brand);min-width:110px;padding-top:3px}
+.editable{font-size:22px;font-weight:800;color:var(--hero-text);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%}
+.editable:focus{border-bottom:2px solid var(--brand);color:var(--brand)}
+.editable.sm{font-size:13px;font-weight:500;color:var(--hero-sub)}
+.editable.sm:focus{color:var(--brand)}
+.hero-field{margin-bottom:8px}
+.hero-field-lbl{font-size:10px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.hero-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.hbadge{background:rgba(107,63,160,.1);border:1px solid rgba(107,63,160,.2);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--brand);font-weight:500}
+
+/* RIGHT: specs table */
+.hero-right{flex-shrink:0;min-width:220px}
+.hero-tag{background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.07em;text-transform:uppercase;display:inline-block;margin-bottom:14px}
+.specs-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff}
+.spec-row{display:flex;align-items:center;padding:9px 13px;border-bottom:1px solid var(--border);gap:8px}
+.spec-row:last-child{border-bottom:none}
+.spec-row .sk{font-size:10px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.05em;min-width:80px;flex-shrink:0}
+.spec-row .sv{font-size:12px;font-weight:600;color:var(--text)}
+
+/* SECTION */
+.sec{margin-bottom:20px}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sec-title{font-size:10px;font-weight:700;color:var(--brand);letter-spacing:.1em;text-transform:uppercase}
+.sec-hint{font-size:11px;color:var(--text-hint)}
+
+/* CARD */
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden}
+
+/* INGREDIENT TABLE */
+.itbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.itbl thead tr{background:#F9FAFB}
+.itbl th{font-size:10px;font-weight:700;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.itbl th.ar{text-align:right}
+.itbl td{padding:0;border-bottom:1px solid var(--border);vertical-align:middle}
+.itbl tbody tr:last-child td{border-bottom:none}
+.itbl tbody tr:hover td{background:#FAFAFA}
+.itbl td input{width:100%;padding:9px 12px;border:none;outline:none;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;background:transparent}
+.itbl td input.ar{text-align:right}
+.itbl td input:focus{background:var(--brand-light);color:var(--brand)}
+.itbl td.num{padding:9px 12px;text-align:right;font-size:12px;color:var(--text-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.itbl td.dc{text-align:center;width:36px;padding:0 5px}
+.delbtn{background:none;border:none;cursor:pointer;color:#D1D5DB;font-size:18px;line-height:1;padding:3px 5px;border-radius:6px}
+.delbtn:hover{color:#EF4444;background:#FEF2F2}
+.add-btn{display:flex;align-items:center;gap:7px;padding:10px 14px;font-size:13px;color:var(--brand);font-weight:500;cursor:pointer;background:none;border:none;border-top:1px solid var(--border);width:100%;font-family:'Inter',sans-serif}
+.add-btn:hover{background:var(--brand-light)}
+.add-btn svg{width:14px;height:14px;stroke:var(--brand);fill:none;stroke-width:2.5;stroke-linecap:round}
+
+/* SETTINGS */
+.settings{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.spill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:8px 12px}
+.spill label{color:var(--text-muted);font-size:12px;white-space:nowrap}
+.spill input{width:68px;border:none;outline:none;font-size:13px;font-weight:600;color:var(--text);text-align:right;font-family:'Inter',sans-serif;background:transparent}
+.spill input:focus{color:var(--brand)}
+.spill .u{font-size:11px;color:var(--text-hint)}
+
+/* RESULTS */
+.res-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.rcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px 15px}
+.rcard .rl{font-size:10px;font-weight:700;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.rcard .rv{font-size:18px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.total-card{background:var(--brand);border-radius:12px;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
+.total-card .rl{font-size:12px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:3px}
+.total-card .sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:3px}
+.total-card .rv{font-size:30px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+
+/* PRICING */
+.ptbl{width:100%;border-collapse:collapse;font-size:13px}
+.ptbl th{font-size:10px;font-weight:700;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;padding:9px 16px;text-align:left;border-bottom:1px solid var(--border);background:#F9FAFB}
+.ptbl td{padding:12px 16px;border-bottom:1px solid var(--border)}
+.ptbl tbody tr:last-child td{border-bottom:none}
+.pstd{font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+.pdisc{font-weight:700;font-size:16px;color:var(--green);font-variant-numeric:tabular-nums}
+.gbadge{display:inline-flex;align-items:center;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+
+/* TIMELINE */
+.tl-grid{display:grid;grid-template-columns:1fr 1fr}
+.tl-item{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border)}
+.tl-item:nth-child(odd){border-right:1px solid var(--border)}
+.tl-item:nth-last-child(-n+2){border-bottom:none}
+.tl-n{width:24px;height:24px;background:var(--brand-light);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand);flex-shrink:0}
+.tl-week{font-size:10px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.tl-desc{font-size:13px;color:var(--text)}
+
+/* PAYMENT */
+.pay-grid{display:grid;grid-template-columns:1fr 1fr 1fr}
+.pay-item{padding:13px 16px;border-right:1px solid var(--border)}
+.pay-item:last-child{border-right:none}
+.pay-lbl{font-size:10px;color:var(--text-hint);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.pay-val{font-size:14px;font-weight:700}
+.pay-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+/* INCLUDED */
+.inc-grid{display:grid;grid-template-columns:1fr 1fr}
+.inc-col{padding:15px 16px}
+.inc-col:first-child{border-right:1px solid var(--border)}
+.inc-hdr{font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:9px;letter-spacing:.04em}
+.inc-yes .inc-hdr{background:var(--green-bg);color:var(--green)}
+.inc-no  .inc-hdr{background:#FEF2F2;color:#DC2626}
+.inc-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.inc-list li{font-size:13px;color:var(--text);display:flex;align-items:center;gap:7px}
+.inc-list li::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.inc-yes .inc-list li::before{background:var(--green)}
+.inc-no  .inc-list li::before{background:#EF4444}
+
+/* FOOTER */
+.footer{text-align:center;font-size:11px;color:var(--text-hint);margin-top:32px;padding-top:18px;border-top:1px solid var(--border)}
+.footer strong{color:var(--text-muted)}
+
+/* PRINT */
+@media print{
+  body{background:#fff}
+  .toolbar,.add-btn,.delbtn,.settings{display:none!important}
+  .page{margin:0;padding:16px;max-width:100%}
+  .hero,.total-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  input{pointer-events:none}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="tb-brand">
+    <div class="tb-dot">A</div>
+    <span class="tb-name">ASAP Nutrition</span>
+    <span class="tb-sub">/ Proposal Builder</span>
+  </div>
+  <div class="tb-actions">
+    <button class="btn btn-ghost" onclick="exportExcel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Скачать Excel
+    </button>
+    <button class="btn btn-brand" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 6,2 18,2 18,9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Скачать PDF
+    </button>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── HERO: left = editable proposal, right = specs ───────────────── -->
+  <div class="hero">
+
+    <!-- LEFT: Commercial Proposal editable block -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">Commercial Proposal</div>
+
+      <div class="hero-field">
+        <div class="hero-field-lbl">Product Name</div>
+        <input class="editable" id="prod-name" value="Hair Support Formula">
+      </div>
+      <div class="hero-field">
+        <div class="hero-field-lbl">Subtitle</div>
+        <input class="editable sm" id="prod-sub" value="Capsules Dietary Supplement">
+      </div>
+      <div class="hero-field">
+        <div class="hero-field-lbl">Manufacturer</div>
+        <input class="editable sm" id="manuf" value="ASAP Nutrition Inc.">
+      </div>
+      <div class="hero-field">
+        <div class="hero-field-lbl">Location</div>
+        <input class="editable sm" id="location" value="Fort Lauderdale, FL, USA · GMP Compliant · FDA Registered">
+      </div>
+
+      <div class="hero-badges">
+        <span class="hbadge">✓ GMP Certified</span>
+        <span class="hbadge">✓ NSF Certified</span>
+        <span class="hbadge">✓ FDA Approved</span>
+        <span class="hbadge">✓ 21 CFR Part 111</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: General Specifications (fixed info) -->
+    <div class="hero-right">
+      <div class="hero-tag">General Specifications</div>
+      <div class="specs-list">
+        <div class="spec-row"><span class="sk">Product</span><span class="sv">Vegetable Capsules (HPMC)</span></div>
+        <div class="spec-row"><span class="sk">Serving</span><span class="sv">2 Capsules</span></div>
+        <div class="spec-row"><span class="sk">Unit Count</span><span class="sv">60 Caps / Pouch</span></div>
+        <div class="spec-row"><span class="sk">Servings</span><span class="sv">30 per Container</span></div>
+        <div class="spec-row"><span class="sk">Other Ingr.</span><span class="sv">Rice Flour, Nu-FLOW®</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INGREDIENTS -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Supplement Facts · Per Serving (2 Capsules)</span>
+      <span class="sec-hint">Редактируй любое поле — итоги пересчитываются сами</span>
+    </div>
+    <div class="card">
+      <table class="itbl" id="itbl">
+        <thead><tr>
+          <th style="width:42%">Active Ingredient</th>
+          <th class="ar" style="width:11%">mg / serv</th>
+          <th class="ar" style="width:13%">$ / kg</th>
+          <th class="ar" style="width:13%">$ / serv</th>
+          <th class="ar" style="width:13%">$ / unit</th>
+          <th style="width:8%"></th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <button class="add-btn" onclick="addRow()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Добавить ингредиент
+      </button>
+    </div>
+    <div class="settings">
+      <div class="spill"><label>MFG &amp; PKG fee / unit</label><input type="number" id="mfg" value="8.88" min="0" step="0.01" oninput="recalc()"><span class="u">$</span></div>
+      <div class="spill"><label>Servings / unit</label><input type="number" id="svgs" value="30" min="1" step="1" oninput="recalc()"></div>
+    </div>
+  </div>
+
+  <!-- COST ANALYSIS -->
+  <div class="sec">
+    <div class="sec-hdr"><span class="sec-title">Cost Analysis</span></div>
+    <div class="res-grid">
+      <div class="rcard"><div class="rl">Ingredient cost / serving</div><div class="rv" id="r-serv">$0.0000</div></div>
+      <div class="rcard"><div class="rl">Ingredient cost / unit</div><div class="rv" id="r-unit">$0.000</div></div>
+      <div class="rcard"><div class="rl">MFG &amp; PKG fee / unit</div><div class="rv" id="r-mfg">$8.88</div></div>
+    </div>
+    <div class="total-card">
+      <div><div class="rl">Total Cost / Ready Unit</div><div class="sub">Ingredient cost + MFG &amp; PKG · обновляется автоматически</div></div>
+      <div class="rv" id="r-total">$0.00</div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="sec">
+    <div class="sec-hdr"><span class="sec-title">Pricing Tiers</span></div>
+    <div class="card">
+      <table class="ptbl">
+        <thead><tr><th>Quantity</th><th>Unit Price</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:500">Up to 5,000 units</td><td class="pstd" id="p1">—</td><td style="font-size:12px;color:var(--text-muted)">Standard entry · 50% deposit to begin</td></tr>
+          <tr><td style="font-weight:500">Up to 10,000 units</td><td class="pdisc" id="p2">—</td><td><span class="gbadge">Scale discount –3.7%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TIMELINE + PAYMENT side by side -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div>
+      <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Production Timeline</span></div>
+      <div class="card">
+        <div class="tl-item" style="border-right:none"><div class="tl-n">1</div><div><div class="tl-week">Week 1</div><div class="tl-desc">Deposit &amp; label approval</div></div></div>
+        <div class="tl-item" style="border-right:none"><div class="tl-n">2</div><div><div class="tl-week">Week 2–3</div><div class="tl-desc">Raw material sourcing &amp; lab testing</div></div></div>
+        <div class="tl-item" style="border-right:none"><div class="tl-n">3</div><div><div class="tl-week">Week 4–5</div><div class="tl-desc">Blending, encapsulation &amp; filling</div></div></div>
+        <div class="tl-item" style="border-right:none;border-bottom:none"><div class="tl-n">4</div><div><div class="tl-week">Week 6</div><div class="tl-desc">Final QC &amp; shipping dispatch</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Payment Terms</span></div>
+      <div class="card" style="height:calc(100% - 26px)">
+        <div class="pay-item" style="border-right:none;border-bottom:1px solid var(--border)"><div class="pay-lbl">Initial Deposit</div><div class="pay-val">50%</div><div class="pay-sub">To begin production</div></div>
+        <div class="pay-item" style="border-right:none;border-bottom:1px solid var(--border)"><div class="pay-lbl">Final Balance</div><div class="pay-val">50%</div><div class="pay-sub">Pre-shipment</div></div>
+        <div class="pay-item" style="border-right:none"><div class="pay-lbl">Production Time</div><div class="pay-val">4–6 Weeks</div><div class="pay-sub">After deposit &amp; label approval</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCLUDED -->
+  <div class="sec">
+    <div class="sec-hdr"><span class="sec-title">What's Included</span></div>
+    <div class="card">
+      <div class="inc-grid">
+        <div class="inc-col inc-yes">
+          <div class="inc-hdr">✓ Included</div>
+          <ul class="inc-list">
+            <li>Raw materials</li><li>Capsule filling</li>
+            <li>Pouch filling &amp; standard packaging</li>
+            <li>Quality control &amp; batch testing</li>
+            <li>GMP manufacturing &amp; production labor</li>
+          </ul>
+        </div>
+        <div class="inc-col inc-no">
+          <div class="inc-hdr">✗ Not Included</div>
+          <ul class="inc-list">
+            <li>Label printing (if required)</li>
+            <li>Custom packaging</li>
+            <li>Design services</li>
+            <li>Shipping &amp; logistics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>ASAP Nutrition Inc.</strong> · 3030 SW 42nd St, Fort Lauderdale, FL 33312 · www.asapnutrition.com<br>
+    Approved by Strategic Sales Division · All prices in USD
+  </div>
+</div>
+
+<script>
+// ── Pure JS XLSX writer ──────────────────────────────────────────────────
+const XW={_t:null,_crc(b){if(!this._t){this._t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);this._t[i]=c;}}let r=0xFFFFFFFF;for(let i=0;i<b.length;i++)r=(this._t[(r^b[i])&0xFF]^(r>>>8));return(r^0xFFFFFFFF)>>>0;},_e(s){return new TextEncoder().encode(s);},_u32(n){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,n,true);return b;},_u16(n){const b=new Uint8Array(2);new DataView(b.buffer).setUint16(0,n,true);return b;},_cat(...a){const out=new Uint8Array(a.reduce((s,x)=>s+x.length,0));let o=0;for(const x of a){out.set(x,o);o+=x.length;}return out;},_entry(name,data){const nb=this._e(name),crc=this._crc(data);const local=this._cat(new Uint8Array([0x50,0x4B,0x03,0x04,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(crc),this._u32(data.length),this._u32(data.length),this._u16(nb.length),new Uint8Array(2),nb,data);return{local,crc,size:data.length,nb,name};},_zip(files){const ls=[],cds=[];let off=0;for(const f of files){ls.push(f.local);cds.push(this._cat(new Uint8Array([0x50,0x4B,0x01,0x02,0x14,0x00,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(f.crc),this._u32(f.size),this._u32(f.size),this._u16(f.nb.length),new Uint8Array(12),this._u32(off),f.nb));off+=f.local.length;}const cd=this._cat(...cds);const eocd=this._cat(new Uint8Array([0x50,0x4B,0x05,0x06,0x00,0x00,0x00,0x00]),this._u16(files.length),this._u16(files.length),this._u32(cd.length),this._u32(off),new Uint8Array(2));return this._cat(...ls,cd,eocd);},
+write(rows){const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const col=n=>{let s='';n++;while(n>0){const r=n%26||26;s=String.fromCharCode(64+r)+s;n=Math.floor((n-r)/26);}return s;};const ss=[],si={};const idx=s=>{s=String(s||'');if(!(s in si)){si[s]=ss.length;ss.push(s);}return si[s];};rows.forEach(r=>(r||[]).forEach(c=>{if(typeof c==='string'&&c)idx(c);}));let sx=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>`;rows.forEach((r,ri)=>{if(!r||!r.length){sx+=`<row r="${ri+1}"/>`;return;}sx+=`<row r="${ri+1}">`;r.forEach((c,ci)=>{if(c===null||c===undefined||c==='')return;const a=col(ci)+(ri+1);sx+=typeof c==='number'?`<c r="${a}"><v>${c}</v></c>`:`<c r="${a}" t="s"><v>${idx(String(c))}</v></c>`;});sx+=`</row>`;});sx+=`</sheetData></worksheet>`;const ssxml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${ss.length}" uniqueCount="${ss.length}">${ss.map(s=>`<si><t xml:space="preserve">${esc(s)}</t></si>`).join('')}</sst>`;const wb=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Proposal" sheetId="1" r:id="rId1"/></sheets></workbook>`;const wbr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;const ar=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;const e=s=>this._e(s);return this._zip([this._entry('[Content_Types].xml',e(ct)),this._entry('_rels/.rels',e(ar)),this._entry('xl/workbook.xml',e(wb)),this._entry('xl/_rels/workbook.xml.rels',e(wbr)),this._entry('xl/worksheets/sheet1.xml',e(sx)),this._entry('xl/sharedStrings.xml',e(ssxml))]);},
+save(rows,filename){const bytes=this.write(rows);const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename||'export.xlsx';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(a.href),1000);}};
+
+// ── App ──────────────────────────────────────────────────────────────────
+const DEFAULT=[
+  ["CO2 Saw Palmetto (45% Fatty Acids)",320,65],["Beta-Sitosterol",200,42],
+  ["Tocotrinols (Potent E)",100,115],["L-Theanine",200,28],
+  ["DIM (Diindolylmethane)",100,85],["Vitamin C (Ascorbic Acid)",150,8.5],
+  ["Astaxanthin",6,450],["Bamboo Silica (70% Silica)",10,48],
+  ["Zinc Bisglycinate",50,32],["Vitamin D3 (2,000 IU)",5,210],
+  ["Copper Bisglycinate",10,38],["L-Methylfolate",0.40,180],["Vitamin B12",0.25,220],
+];
+let uid=0;
+function addRow(name='',mg='',pkg=''){
+  uid++;const id='r'+uid;
+  const tr=document.createElement('tr');tr.id=id;
+  tr.innerHTML=`<td><input type="text" placeholder="Ingredient name" value="${name}" oninput="recalc()"></td><td><input type="number" class="ar" min="0" step="0.001" placeholder="0" value="${mg}" oninput="recalc()"></td><td><input type="number" class="ar" min="0" step="0.01" placeholder="0.00" value="${pkg}" oninput="recalc()"></td><td class="num" id="sv-${id}">—</td><td class="num" id="su-${id}">—</td><td class="dc"><button class="delbtn" onclick="document.getElementById('${id}').remove();recalc()" title="Удалить">×</button></td>`;
+  document.getElementById('tbody').appendChild(tr);recalc();
+}
+function recalc(){
+  const svgs=parseInt(document.getElementById('svgs').value)||30;
+  const mfg=parseFloat(document.getElementById('mfg').value)||0;
+  let tot=0;
+  document.querySelectorAll('#tbody tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    const mg=parseFloat(ins[1]?.value)||0,pkg=parseFloat(ins[2]?.value)||0;
+    const s=(mg/1000000)*pkg;tot+=s;
+    const id=tr.id;
+    const sv=document.getElementById('sv-'+id),su=document.getElementById('su-'+id);
+    if(sv)sv.textContent=s>0?'$'+s.toFixed(4):'—';
+    if(su)su.textContent=s>0?'$'+(s*svgs).toFixed(3):'—';
+  });
+  const ui=tot*svgs,t=ui+mfg;
+  document.getElementById('r-serv').textContent='$'+tot.toFixed(4);
+  document.getElementById('r-unit').textContent='$'+ui.toFixed(3);
+  document.getElementById('r-mfg').textContent='$'+mfg.toFixed(2);
+  document.getElementById('r-total').textContent='$'+t.toFixed(2);
+  document.getElementById('p1').textContent='$'+t.toFixed(2);
+  document.getElementById('p2').textContent='$'+(t*0.963).toFixed(2);
+}
+function exportExcel(){
+  const svgs=parseInt(document.getElementById('svgs').value)||30;
+  const mfg=parseFloat(document.getElementById('mfg').value)||0;
+  const name=document.getElementById('prod-name').value;
+  const rows=[
+    ['COMMERCIAL PROPOSAL — '+name.toUpperCase()],
+    [document.getElementById('manuf').value+' · '+document.getElementById('location').value],
+    [],['SUPPLEMENT FACTS — PER SERVING (2 CAPSULES)'],
+    ['Active Ingredient','mg / serv','$ / kg','$ / serv','$ / unit'],
+  ];
+  let tot=0;
+  document.querySelectorAll('#tbody tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    const n=ins[0]?.value||'',mg=parseFloat(ins[1]?.value)||0,pkg=parseFloat(ins[2]?.value)||0;
+    const s=(mg/1000000)*pkg;tot+=s;
+    rows.push([n,mg,pkg,parseFloat(s.toFixed(6)),parseFloat((s*svgs).toFixed(4))]);
+  });
+  const ui=tot*svgs,t=ui+mfg;
+  rows.push([],[],[`COST ANALYSIS`],
+    ['Ingredient Cost / Serving','','','','$'+tot.toFixed(4)],
+    ['Ingredient Cost / Unit ('+svgs+' servings)','','','','$'+ui.toFixed(3)],
+    ['MFG & PKG Fee / Unit','','','','$'+mfg.toFixed(2)],
+    ['TOTAL COST / READY UNIT','','','','$'+t.toFixed(2)],
+    [],[`PRICING TIERS`],
+    ['Up to 5,000 units — Standard entry','','','','$'+t.toFixed(2)],
+    ['Up to 10,000 units — Scale discount -3.7%','','','','$'+(t*0.963).toFixed(2)],
+    [],[`PAYMENT TERMS`],
+    ['Initial Deposit','50%'],['Final Balance','50% pre-shipment'],
+    ['Production Time','4–6 weeks after deposit & label approval']
+  );
+  XW.save(rows,'ASAP_'+name.replace(/\s+/g,'_')+'_Proposal.xlsx');
+}
+DEFAULT.forEach(([n,m,p])=>addRow(n,m,p));
+</script>
+</body>
+</html>
