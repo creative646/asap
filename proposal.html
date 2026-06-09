@@ -353,80 +353,161 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 </div>
 
 <script>
-// ── Pure JS XLSX writer ──────────────────────────────────────────────────
-const XW={_t:null,_crc(b){if(!this._t){this._t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);this._t[i]=c;}}let r=0xFFFFFFFF;for(let i=0;i<b.length;i++)r=(this._t[(r^b[i])&0xFF]^(r>>>8));return(r^0xFFFFFFFF)>>>0;},_e(s){return new TextEncoder().encode(s);},_u32(n){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,n,true);return b;},_u16(n){const b=new Uint8Array(2);new DataView(b.buffer).setUint16(0,n,true);return b;},_cat(...a){const out=new Uint8Array(a.reduce((s,x)=>s+x.length,0));let o=0;for(const x of a){out.set(x,o);o+=x.length;}return out;},_entry(name,data){const nb=this._e(name),crc=this._crc(data);const local=this._cat(new Uint8Array([0x50,0x4B,0x03,0x04,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(crc),this._u32(data.length),this._u32(data.length),this._u16(nb.length),new Uint8Array(2),nb,data);return{local,crc,size:data.length,nb,name};},_zip(files){const ls=[],cds=[];let off=0;for(const f of files){ls.push(f.local);cds.push(this._cat(new Uint8Array([0x50,0x4B,0x01,0x02,0x14,0x00,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(f.crc),this._u32(f.size),this._u32(f.size),this._u16(f.nb.length),new Uint8Array(12),this._u32(off),f.nb));off+=f.local.length;}const cd=this._cat(...cds);const eocd=this._cat(new Uint8Array([0x50,0x4B,0x05,0x06,0x00,0x00,0x00,0x00]),this._u16(files.length),this._u16(files.length),this._u32(cd.length),this._u32(off),new Uint8Array(2));return this._cat(...ls,cd,eocd);},
-write(rows){const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const col=n=>{let s='';n++;while(n>0){const r=n%26||26;s=String.fromCharCode(64+r)+s;n=Math.floor((n-r)/26);}return s;};const ss=[],si={};const idx=s=>{s=String(s||'');if(!(s in si)){si[s]=ss.length;ss.push(s);}return si[s];};rows.forEach(r=>(r||[]).forEach(c=>{if(typeof c==='string'&&c)idx(c);}));let sx=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>`;rows.forEach((r,ri)=>{if(!r||!r.length){sx+=`<row r="${ri+1}"/>`;return;}sx+=`<row r="${ri+1}">`;r.forEach((c,ci)=>{if(c===null||c===undefined||c==='')return;const a=col(ci)+(ri+1);sx+=typeof c==='number'?`<c r="${a}"><v>${c}</v></c>`:`<c r="${a}" t="s"><v>${idx(String(c))}</v></c>`;});sx+=`</row>`;});sx+=`</sheetData></worksheet>`;const ssxml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${ss.length}" uniqueCount="${ss.length}">${ss.map(s=>`<si><t xml:space="preserve">${esc(s)}</t></si>`).join('')}</sst>`;const wb=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Proposal" sheetId="1" r:id="rId1"/></sheets></workbook>`;const wbr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;const ar=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;const e=s=>this._e(s);return this._zip([this._entry('[Content_Types].xml',e(ct)),this._entry('_rels/.rels',e(ar)),this._entry('xl/workbook.xml',e(wb)),this._entry('xl/_rels/workbook.xml.rels',e(wbr)),this._entry('xl/worksheets/sheet1.xml',e(sx)),this._entry('xl/sharedStrings.xml',e(ssxml))]);},
-save(rows,filename){const bytes=this.write(rows);const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename||'export.xlsx';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(a.href),1000);}};
+// ── XLSX writer WITH styles (bold, colors, column widths) ────────────────
+const XW={
+_t:null,
+_crc(b){if(!this._t){this._t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);this._t[i]=c;}}let r=0xFFFFFFFF;for(let i=0;i<b.length;i++)r=(this._t[(r^b[i])&0xFF]^(r>>>8));return(r^0xFFFFFFFF)>>>0;},
+_e(s){return new TextEncoder().encode(s);},
+_u32(n){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,n,true);return b;},
+_u16(n){const b=new Uint8Array(2);new DataView(b.buffer).setUint16(0,n,true);return b;},
+_cat(...a){const out=new Uint8Array(a.reduce((s,x)=>s+x.length,0));let o=0;for(const x of a){out.set(x,o);o+=x.length;}return out;},
+_entry(name,data){const nb=this._e(name),crc=this._crc(data);const local=this._cat(new Uint8Array([0x50,0x4B,0x03,0x04,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(crc),this._u32(data.length),this._u32(data.length),this._u16(nb.length),new Uint8Array(2),nb,data);return{local,crc,size:data.length,nb,name};},
+_zip(files){const ls=[],cds=[];let off=0;for(const f of files){ls.push(f.local);cds.push(this._cat(new Uint8Array([0x50,0x4B,0x01,0x02,0x14,0x00,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(f.crc),this._u32(f.size),this._u32(f.size),this._u16(f.nb.length),new Uint8Array(12),this._u32(off),f.nb));off+=f.local.length;}const cd=this._cat(...cds);const eocd=this._cat(new Uint8Array([0x50,0x4B,0x05,0x06,0x00,0x00,0x00,0x00]),this._u16(files.length),this._u16(files.length),this._u32(cd.length),this._u32(off),new Uint8Array(2));return this._cat(...ls,cd,eocd);},
 
-// ── App ──────────────────────────────────────────────────────────────────
-const DEFAULT=[
-  ["CO2 Saw Palmetto (45% Fatty Acids)",320,65],["Beta-Sitosterol",200,42],
-  ["Tocotrinols (Potent E)",100,115],["L-Theanine",200,28],
-  ["DIM (Diindolylmethane)",100,85],["Vitamin C (Ascorbic Acid)",150,8.5],
-  ["Astaxanthin",6,450],["Bamboo Silica (70% Silica)",10,48],
-  ["Zinc Bisglycinate",50,32],["Vitamin D3 (2,000 IU)",5,210],
-  ["Copper Bisglycinate",10,38],["L-Methylfolate",0.40,180],["Vitamin B12",0.25,220],
-];
-let uid=0;
-function addRow(name='',mg='',pkg=''){
-  uid++;const id='r'+uid;
-  const tr=document.createElement('tr');tr.id=id;
-  tr.innerHTML=`<td><input type="text" placeholder="Ingredient name" value="${name}" oninput="recalc()"></td><td><input type="number" class="ar" min="0" step="0.001" placeholder="0" value="${mg}" oninput="recalc()"></td><td><input type="number" class="ar" min="0" step="0.01" placeholder="0.00" value="${pkg}" oninput="recalc()"></td><td class="num" id="sv-${id}">—</td><td class="num" id="su-${id}">—</td><td class="dc"><button class="delbtn" onclick="document.getElementById('${id}').remove();recalc()" title="Удалить">×</button></td>`;
-  document.getElementById('tbody').appendChild(tr);recalc();
-}
-function recalc(){
-  const svgs=parseInt(document.getElementById('svgs').value)||30;
-  const mfg=parseFloat(document.getElementById('mfg').value)||0;
-  let tot=0;
-  document.querySelectorAll('#tbody tr').forEach(tr=>{
-    const ins=tr.querySelectorAll('input');
-    const mg=parseFloat(ins[1]?.value)||0,pkg=parseFloat(ins[2]?.value)||0;
-    const s=(mg/1000000)*pkg;tot+=s;
-    const id=tr.id;
-    const sv=document.getElementById('sv-'+id),su=document.getElementById('su-'+id);
-    if(sv)sv.textContent=s>0?'$'+s.toFixed(4):'—';
-    if(su)su.textContent=s>0?'$'+(s*svgs).toFixed(3):'—';
+// rows: array of {cells: [{v, s}], h?}
+// s = style index, h = row height
+// styles: 0=normal, 1=title(white on navy,bold), 2=section(purple bg,bold), 3=col-header(grey bg,bold), 4=data, 5=data-right, 6=total(bold), 7=total-right(bold,green), 8=subheader(bold), 9=data-currency
+write(rowDefs, colWidths){
+  const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const colL=n=>{let s='';n++;while(n>0){const r=n%26||26;s=String.fromCharCode(64+r)+s;n=Math.floor((n-r)/26);}return s;};
+  const ss=[],si={};
+  const idx=s=>{s=String(s||'');if(!(s in si)){si[s]=ss.length;ss.push(s);}return si[s];};
+  rowDefs.forEach(rd=>(rd.cells||[]).forEach(c=>{if(typeof c.v==='string'&&c.v)idx(c.v);}));
+
+  // Styles XML
+  const stylesXML=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="6">
+  <font><sz val="11"/><name val="Calibri"/></font>
+  <font><sz val="16"/><b/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>
+  <font><sz val="10"/><b/><color rgb="FF6B3FA0"/><name val="Calibri"/></font>
+  <font><sz val="10"/><b/><color rgb="FF555555"/><name val="Calibri"/></font>
+  <font><sz val="11"/><b/><name val="Calibri"/></font>
+  <font><sz val="11"/><b/><color rgb="FF16A34A"/><name val="Calibri"/></font>
+</fonts>
+<fills count="6">
+  <fill><patternFill patternType="none"/></fill>
+  <fill><patternFill patternType="gray125"/></fill>
+  <fill><patternFill patternType="solid"><fgColor rgb="FF0D1B4B"/></patternFill></fill>
+  <fill><patternFill patternType="solid"><fgColor rgb="FFF4EFF9"/></patternFill></fill>
+  <fill><patternFill patternType="solid"><fgColor rgb="FFF0F0F5"/></patternFill></fill>
+  <fill><patternFill patternType="solid"><fgColor rgb="FFE8F5E9"/></patternFill></fill>
+</fills>
+<borders count="2">
+  <border><left/><right/><top/><bottom/><diagonal/></border>
+  <border><left style="thin"><color rgb="FFE5E7EB"/></left><right style="thin"><color rgb="FFE5E7EB"/></right><top style="thin"><color rgb="FFE5E7EB"/></top><bottom style="thin"><color rgb="FFE5E7EB"/></bottom><diagonal/></border>
+</borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="10">
+  <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+  <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"><alignment vertical="center" wrapText="1"/></xf>
+  <xf numFmtId="0" fontId="2" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1"><alignment vertical="center"/></xf>
+  <xf numFmtId="0" fontId="3" fillId="4" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"><alignment horizontal="center" vertical="center"/></xf>
+  <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1"><alignment vertical="center"/></xf>
+  <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1"><alignment horizontal="right" vertical="center"/></xf>
+  <xf numFmtId="0" fontId="4" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1"><alignment vertical="center"/></xf>
+  <xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"><alignment horizontal="right" vertical="center"/></xf>
+  <xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyFont="1"><alignment vertical="center"/></xf>
+  <xf numFmtId="4" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyNumberFormat="1"><alignment horizontal="right" vertical="center"/></xf>
+</cellXfs>
+</styleSheet>`;
+
+  let sx=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">`;
+  if(colWidths&&colWidths.length){sx+=`<cols>`;colWidths.forEach((w,i)=>{sx+=`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`;});sx+=`</cols>`;}
+  sx+=`<sheetData>`;
+  rowDefs.forEach((rd,ri)=>{
+    const cells=rd.cells||[];
+    const rattr=rd.h?` ht="${rd.h}" customHeight="1"`:'';
+    if(!cells.length){sx+=`<row r="${ri+1}"${rattr}/>`;return;}
+    sx+=`<row r="${ri+1}"${rattr}>`;
+    cells.forEach((c,ci)=>{
+      if(c.v===null||c.v===undefined||c.v==='')return;
+      const a=colL(ci)+(ri+1);
+      const s=c.s||0;
+      if(typeof c.v==='number') sx+=`<c r="${a}" s="${s}"><v>${c.v}</v></c>`;
+      else sx+=`<c r="${a}" t="s" s="${s}"><v>${idx(String(c.v))}</v></c>`;
+    });
+    sx+=`</row>`;
   });
-  const ui=tot*svgs,t=ui+mfg;
-  document.getElementById('r-serv').textContent='$'+tot.toFixed(4);
-  document.getElementById('r-unit').textContent='$'+ui.toFixed(3);
-  document.getElementById('r-mfg').textContent='$'+mfg.toFixed(2);
-  document.getElementById('r-total').textContent='$'+t.toFixed(2);
-  document.getElementById('p1').textContent='$'+t.toFixed(2);
-  document.getElementById('p2').textContent='$'+(t*0.963).toFixed(2);
-}
+  sx+=`</sheetData></worksheet>`;
+
+  const ssxml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${ss.length}" uniqueCount="${ss.length}">${ss.map(s=>`<si><t xml:space="preserve">${esc(s)}</t></si>`).join('')}</sst>`;
+  const wb=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Proposal" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+  const wbr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;
+  const ar=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
+  const e=s=>this._e(s);
+  return this._zip([this._entry('[Content_Types].xml',e(ct)),this._entry('_rels/.rels',e(ar)),this._entry('xl/workbook.xml',e(wb)),this._entry('xl/_rels/workbook.xml.rels',e(wbr)),this._entry('xl/worksheets/sheet1.xml',e(sx)),this._entry('xl/sharedStrings.xml',e(ssxml)),this._entry('xl/styles.xml',e(stylesXML))]);
+},
+save(rowDefs,colWidths,filename){const bytes=this.write(rowDefs,colWidths);const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename||'export.xlsx';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+};
+
+// ── exportExcel ──────────────────────────────────────────────────────────
+// Style index reference:
+// 0=normal  1=title(white/navy)  2=section(purple)  3=col-header(grey,bold)
+// 4=data-left  5=data-right  6=bold-left  7=bold-right-green  8=bold-label  9=currency-right
+
 function exportExcel(){
   const svgs=parseInt(document.getElementById('svgs').value)||30;
   const mfg=parseFloat(document.getElementById('mfg').value)||0;
   const name=document.getElementById('prod-name').value;
-  const rows=[
-    ['COMMERCIAL PROPOSAL — '+name.toUpperCase()],
-    ['ASAP Nutrition Inc. · 3030 SW 42nd St, Fort Lauderdale, FL, USA'],
-    [],['SUPPLEMENT FACTS — PER SERVING (2 CAPSULES)'],
-    ['Active Ingredient','mg / serv','$ / kg','$ / serv','$ / unit'],
-  ];
+
+  const N=0,TI=1,SE=2,CH=3,DL=4,DR=5,BL=6,GR=7,BO=8,CU=9;
+  const R=(cells,h)=>({cells,h});
+  const C=(v,s)=>({v,s});
+
+  const rows=[];
+
+  // Title block
+  rows.push(R([C('COMMERCIAL PROPOSAL — '+name.toUpperCase(),TI),C('',TI),C('',TI),C('',TI),C('',TI)],32));
+  rows.push(R([C('ASAP Nutrition Inc.  ·  3030 SW 42nd St, Fort Lauderdale, FL, USA  ·  GMP Compliant Manufacturing',TI),C('',TI),C('',TI),C('',TI),C('',TI)],18));
+  rows.push(R([]));
+
+  // Supplement Facts header
+  rows.push(R([C('SUPPLEMENT FACTS  —  PER SERVING',SE),C('',SE),C('',SE),C('',SE),C('',SE)],20));
+  rows.push(R([C('Active Ingredient',CH),C('mg / serv',CH),C('$ / kg',CH),C('$ / serv',CH),C('$ / unit',CH)],18));
+
   let tot=0;
-  document.querySelectorAll('#tbody tr').forEach(tr=>{
+  document.querySelectorAll('#tbody tr').forEach((tr,i)=>{
     const ins=tr.querySelectorAll('input');
-    const n=ins[0]?.value||'',mg=parseFloat(ins[1]?.value)||0,pkg=parseFloat(ins[2]?.value)||0;
-    const s=(mg/1000000)*pkg;tot+=s;
-    rows.push([n,mg,pkg,parseFloat(s.toFixed(6)),parseFloat((s*svgs).toFixed(4))]);
+    const n=ins[0]?.value||'';
+    const mg=parseFloat(ins[1]?.value)||0;
+    const pkg=parseFloat(ins[2]?.value)||0;
+    const s=(mg/1000000)*pkg;
+    tot+=s;
+    rows.push(R([C(n,DL),C(mg,DR),C(pkg,CU),C(parseFloat(s.toFixed(6)),CU),C(parseFloat((s*svgs).toFixed(4)),CU)],17));
   });
-  const ui=tot*svgs,t=ui+mfg;
-  rows.push([],[],[`COST ANALYSIS`],
-    ['Ingredient Cost / Serving','','','','$'+tot.toFixed(4)],
-    ['Ingredient Cost / Unit ('+svgs+' servings)','','','','$'+ui.toFixed(3)],
-    ['MFG & PKG Fee / Unit','','','','$'+mfg.toFixed(2)],
-    ['TOTAL COST / READY UNIT','','','','$'+t.toFixed(2)],
-    [],[`PRICING TIERS`],
-    ['Up to 5,000 units — Standard entry','','','','$'+t.toFixed(2)],
-    ['Up to 10,000 units — Scale discount -3.7%','','','','$'+(t*0.963).toFixed(2)],
-    [],[`PAYMENT TERMS`],
-    ['Initial Deposit','50%'],['Final Balance','50% pre-shipment'],
-    ['Production Time','4–6 weeks after deposit & label approval']
-  );
-  XW.save(rows,'ASAP_'+name.replace(/\s+/g,'_')+'_Proposal.xlsx');
+
+  const ui=tot*svgs, t=ui+mfg;
+
+  rows.push(R([]));
+  rows.push(R([C('Other Ingredients: Rice Flour, Nu-FLOW® (Organic Rice Hulls), HPMC Vegetable Capsule',N),C('',N),C('',N),C('',N),C('',N)]));
+  rows.push(R([]));
+
+  // Cost Analysis
+  rows.push(R([C('COST ANALYSIS',SE),C('',SE),C('',SE),C('',SE),C('',SE)],20));
+  rows.push(R([C('Ingredient Cost / Serving',DL),C('',N),C('',N),C('',N),C('$'+tot.toFixed(4),DR)]));
+  rows.push(R([C('Ingredient Cost / Unit ('+svgs+' servings)',DL),C('',N),C('',N),C('',N),C('$'+ui.toFixed(3),DR)]));
+  rows.push(R([C('MFG & PKG Fee / Unit',DL),C('',N),C('',N),C('',N),C('$'+mfg.toFixed(2),DR)]));
+  rows.push(R([C('TOTAL COST / READY UNIT',BL),C('',BL),C('',BL),C('',BL),C('$'+t.toFixed(2),GR)],22));
+  rows.push(R([]));
+
+  // Pricing
+  rows.push(R([C('PRICING TIERS',SE),C('',SE),C('',SE),C('',SE),C('',SE)],20));
+  rows.push(R([C('Quantity',CH),C('Unit Price',CH),C('Notes',CH),C('',CH),C('',CH)],18));
+  rows.push(R([C('Up to 5,000 units',DL),C('$'+t.toFixed(2),DR),C('Standard entry · 50% deposit to begin',DL),C('',N),C('',N)]));
+  rows.push(R([C('Up to 10,000 units',DL),C('$'+(t*0.963).toFixed(2),GR),C('Scale discount –3.7%',DL),C('',N),C('',N)]));
+  rows.push(R([]));
+
+  // Payment
+  rows.push(R([C('PAYMENT TERMS',SE),C('',SE),C('',SE),C('',SE),C('',SE)],20));
+  rows.push(R([C('Initial Deposit',CH),C('Final Balance',CH),C('Production Time',CH),C('',N),C('',N)],18));
+  rows.push(R([C('50%',DL),C('50% pre-shipment',DL),C('4–6 weeks after deposit & label approval',DL),C('',N),C('',N)]));
+
+  const colWidths=[44,12,12,12,14];
+  XW.save(rows,colWidths,'ASAP_'+name.replace(/\s+/g,'_')+'_Proposal.xlsx');
 }
+
 DEFAULT.forEach(([n,m,p])=>addRow(n,m,p));
 </script>
 </body>
