@@ -304,7 +304,7 @@ function recalc(){
     const ac = document.getElementById('amt-' + id);
     if(ac) ac.textContent = amt > 0 ? '$' + amt.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—';
   });
-  const received = parseFloat(document.getElementById('t-received').value) || 0;
+  const received = parseFloat(document.getElementById('t-received').value.replace(/,/g,'')) || 0;
   const total = sub - received;
   document.getElementById('t-sub').textContent = '$' + sub.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
   document.getElementById('t-total').textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
