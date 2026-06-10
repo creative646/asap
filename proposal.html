@@ -295,11 +295,11 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 
       <div class="hero-field">
         <div class="hero-field-lbl">Product Name</div>
-        <input class="editable" id="prod-name" value="Hair Support Formula">
+        <input class="editable" id="prod-name" value="Name Formula">
       </div>
 
       <div style="margin-top:12px;font-size:13px;color:var(--hero-sub);line-height:2">
-        <input class="editable sm" id="prod-sub" value="Capsules Dietary Supplement">
+        <input class="editable sm" id="prod-sub" value="Dietary Supplement">
         
         <div style="font-weight:700;color:var(--hero-text)">ASAP Nutrition Inc.</div>
         <div>3030 SW 42nd St, Fort Lauderdale, FL, USA</div>
@@ -319,23 +319,23 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
       <div class="specs-list">
         <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
           <span class="sk">Product</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Vegetable Capsules (HPMC)</textarea>
+          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
         </div>
         <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
           <span class="sk">Serving</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">2 Capsules</textarea>
+          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
         </div>
         <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
           <span class="sk">Unit Count</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">60 Caps / Pouch</textarea>
+          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
         </div>
         <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
           <span class="sk">Servings</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">30 per Container</textarea>
+          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
         </div>
         <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
           <span class="sk">Other Ingr.</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Rice Flour, Nu-FLOW®</textarea>
+          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
         </div>
       </div>
     </div>
@@ -467,12 +467,9 @@ save(rows,filename){const bytes=this.write(rows);const blob=new Blob([bytes],{ty
 
 // ── App ──────────────────────────────────────────────────────────────────
 const DEFAULT=[
-  ["CO2 Saw Palmetto (45% Fatty Acids)",320,65],["Beta-Sitosterol",200,42],
-  ["Tocotrinols (Potent E)",100,115],["L-Theanine",200,28],
-  ["DIM (Diindolylmethane)",100,85],["Vitamin C (Ascorbic Acid)",150,8.5],
-  ["Astaxanthin",6,450],["Bamboo Silica (70% Silica)",10,48],
-  ["Zinc Bisglycinate",50,32],["Vitamin D3 (2,000 IU)",5,210],
-  ["Copper Bisglycinate",10,38],["L-Methylfolate",0.40,180],["Vitamin B12",0.25,220],
+  const DEFAULT = [
+  ["", "", ""],
+  ["", "", ""]
 ];
 let uid=0;
 function addRow(name='',mg='',pkg=''){
