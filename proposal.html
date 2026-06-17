@@ -141,16 +141,34 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 /* TIMELINE */
 .tl-item{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border)}
 .tl-item:last-child{border-bottom:none}
-.tl-n{width:24px;height:24px;background:var(--brand-light);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand);flex-shrink:0}
-.tl-week{font-size:10px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
-.tl-desc{font-size:13px;color:var(--text)}
+.tl-n{width:24px;height:24px;background:var(--brand-light);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand);flex-shrink:0;margin-top:2px}
+.tl-content{flex:1;min-width:0}
+.tl-week-inp{font-size:10px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;padding:0}
+.tl-week-inp:focus{color:var(--brand-dark)}
+.tl-desc-ta{font-size:13px;color:var(--text);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;resize:none;overflow:hidden;line-height:1.5;padding:0;display:block}
+.tl-desc-ta:focus{color:var(--brand)}
+.tl-del{flex-shrink:0;margin-top:2px}
+
+/* EDITABLE INCLUDED LIST */
+.inc-item{display:flex;align-items:flex-start;gap:7px;margin-bottom:2px}
+.inc-item::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:8px}
+.inc-yes .inc-item::before{background:var(--green)}
+.inc-no .inc-item::before{background:#EF4444}
+.inc-item-ta{font-size:13px;color:var(--text);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;resize:none;overflow:hidden;line-height:1.5;padding:0;display:block}
+.inc-item-ta:focus{color:var(--brand)}
+.inc-item .delbtn{flex-shrink:0;font-size:14px;padding:0 2px;margin-top:1px}
 
 /* PAYMENT */
-.pay-item{padding:13px 16px;border-bottom:1px solid var(--border)}
+.pay-item{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px}
 .pay-item:last-child{border-bottom:none}
-.pay-lbl{font-size:10px;color:var(--text-hint);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.pay-val{font-size:14px;font-weight:700}
-.pay-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.pay-item-fields{flex:1;min-width:0}
+.pay-lbl-inp{font-size:10px;color:var(--text-hint);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;padding:0}
+.pay-lbl-inp:focus{color:var(--brand)}
+.pay-val-inp{font-size:14px;font-weight:700;color:var(--text);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;padding:0;margin-bottom:2px}
+.pay-val-inp:focus{color:var(--brand)}
+.pay-sub-ta{font-size:12px;color:var(--text-muted);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;resize:none;overflow:hidden;line-height:1.4;padding:0;display:block}
+.pay-sub-ta:focus{color:var(--brand)}
+.pay-item .delbtn{flex-shrink:0;margin-top:2px}
 
 /* INCLUDED */
 .inc-grid{display:grid;grid-template-columns:1fr 1fr}
@@ -159,11 +177,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .inc-hdr{font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:9px;letter-spacing:.04em}
 .inc-yes .inc-hdr{background:var(--green-bg);color:var(--green)}
 .inc-no  .inc-hdr{background:#FEF2F2;color:#DC2626}
-.inc-list{list-style:none;display:flex;flex-direction:column;gap:5px}
-.inc-list li{font-size:13px;color:var(--text);display:flex;align-items:center;gap:7px}
-.inc-list li::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.inc-yes .inc-list li::before{background:var(--green)}
-.inc-no  .inc-list li::before{background:#EF4444}
+.inc-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
 
 /* FOOTER */
 .footer{text-align:center;font-size:11px;color:var(--text-hint);margin-top:32px;padding-top:18px;border-top:1px solid var(--border)}
@@ -190,6 +204,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   .editable{font-size:18px}
   .two-col{grid-template-columns:1fr!important}
   .cp-tier-btn{min-width:50px;font-size:9px}
+  .tl-item{padding:11px 12px}
 }
 @media(max-width:400px){
   .hero-badges{gap:4px}
@@ -203,6 +218,10 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   .page{margin:0;padding:10px 14px;max-width:100%}
   .hero,.cost-panel{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   input,textarea{pointer-events:none}
+  .tl-week-inp{font-size:9px}
+  .tl-desc-ta,.inc-item-ta,.pay-sub-ta{font-size:11px}
+  .pay-lbl-inp{font-size:9px}
+  .pay-val-inp{font-size:12px}
   .facts-layout{grid-template-columns:1fr 180px!important;gap:8px!important}
   .itbl{font-size:10px;table-layout:fixed;width:100%}
   .itbl th{padding:5px 6px;font-size:8px;white-space:nowrap}
@@ -282,11 +301,11 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
         <div class="card">
           <table class="itbl" id="itbl">
             <thead><tr>
-              <th style="width:44%">Active Ingredient</th>
-              <th class="ar" style="width:13%">mg / serv</th>
-              <th class="ar" style="width:14%">$ / kg</th>
+              <th style="width:38%">Active Ingredient</th>
+              <th class="ar" style="width:12%">mg / serv</th>
+              <th class="ar" style="width:18%">$ / kg</th>
               <th class="ar" style="width:14%">$ / serv</th>
-              <th class="ar" style="width:15%">$ / unit</th>
+              <th class="ar" style="width:14%">$ / unit</th>
               <th style="width:8%"></th>
             </tr></thead>
             <tbody id="tbody"></tbody>
@@ -381,18 +400,21 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
     <div>
       <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Production Timeline</span></div>
       <div class="card">
-        <div class="tl-item"><div class="tl-n">1</div><div><div class="tl-week">Week 1</div><div class="tl-desc">Deposit &amp; label approval</div></div></div>
-        <div class="tl-item"><div class="tl-n">2</div><div><div class="tl-week">Week 2–3</div><div class="tl-desc">Raw material sourcing &amp; lab testing</div></div></div>
-        <div class="tl-item"><div class="tl-n">3</div><div><div class="tl-week">Week 4–5</div><div class="tl-desc">Blending, encapsulation &amp; filling</div></div></div>
-        <div class="tl-item"><div class="tl-n">4</div><div><div class="tl-week">Week 6</div><div class="tl-desc">Final QC &amp; shipping dispatch</div></div></div>
+        <div id="timeline-body"></div>
+        <button class="add-btn" onclick="addTimelineStep()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add step
+        </button>
       </div>
     </div>
     <div>
       <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Payment Terms</span></div>
       <div class="card">
-        <div class="pay-item"><div class="pay-lbl">Initial Deposit</div><div class="pay-val">50%</div><div class="pay-sub">To begin production</div></div>
-        <div class="pay-item"><div class="pay-lbl">Final Balance</div><div class="pay-val">50%</div><div class="pay-sub">Pre-shipment</div></div>
-        <div class="pay-item"><div class="pay-lbl">Production Time</div><div class="pay-val">4–6 Weeks</div><div class="pay-sub">After deposit &amp; label approval</div></div>
+        <div id="payment-body"></div>
+        <button class="add-btn" onclick="addPaymentItem()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add term
+        </button>
       </div>
     </div>
   </div>
@@ -404,21 +426,19 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
       <div class="inc-grid">
         <div class="inc-col inc-yes">
           <div class="inc-hdr">✓ Included</div>
-          <ul class="inc-list">
-            <li>Raw materials</li><li>Capsule filling</li>
-            <li>Pouch filling &amp; standard packaging</li>
-            <li>Quality control &amp; batch testing</li>
-            <li>GMP manufacturing &amp; production labor</li>
-          </ul>
+          <ul class="inc-list" id="inc-yes-list"></ul>
+          <button class="add-btn" style="border-top:none;padding:6px 0 0;justify-content:flex-start" onclick="addIncItem('yes')">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add item
+          </button>
         </div>
         <div class="inc-col inc-no">
           <div class="inc-hdr">✗ Not Included</div>
-          <ul class="inc-list">
-            <li>Label printing (if required)</li>
-            <li>Custom packaging</li>
-            <li>Design services</li>
-            <li>Shipping &amp; logistics</li>
-          </ul>
+          <ul class="inc-list" id="inc-no-list"></ul>
+          <button class="add-btn" style="border-top:none;padding:6px 0 0;justify-content:flex-start" onclick="addIncItem('no')">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add item
+          </button>
         </div>
       </div>
     </div>
@@ -532,6 +552,55 @@ function totalPackagingCostPerUnit(){
   return tot;
 }
 
+// ── Production Timeline (editable) ──────────────────────────────────────
+let tluid = 0;
+function addTimelineStep(week, desc){
+  week = week || ''; desc = desc || '';
+  tluid++; const id = 'tl' + tluid;
+  const wrap = document.getElementById('timeline-body');
+  const num = wrap.children.length + 1;
+  const div = document.createElement('div');
+  div.className = 'tl-item';
+  div.id = id;
+  div.innerHTML = '<div class="tl-n">' + num + '</div><div class="tl-content"><input class="tl-week-inp" placeholder="Week 1" value="' + week + '"><textarea class="tl-desc-ta" rows="1" placeholder="Step description" oninput="autoH(this)">' + desc + '</textarea></div><button class="delbtn tl-del" onclick="document.getElementById(\'' + id + '\').remove();renumberTimeline()" title="Remove">×</button>';
+  wrap.appendChild(div);
+  const ta = div.querySelector('.tl-desc-ta');
+  setTimeout(() => autoH(ta), 0);
+}
+function renumberTimeline(){
+  document.querySelectorAll('#timeline-body .tl-n').forEach((el, i) => el.textContent = i + 1);
+}
+
+// ── What's Included (editable) ──────────────────────────────────────────
+let inciuid = 0;
+function addIncItem(type, text){
+  text = text || '';
+  inciuid++; const id = 'inci' + inciuid;
+  const list = document.getElementById(type === 'yes' ? 'inc-yes-list' : 'inc-no-list');
+  const li = document.createElement('li');
+  li.className = 'inc-item';
+  li.id = id;
+  li.innerHTML = '<textarea class="inc-item-ta" rows="1" placeholder="Item" oninput="autoH(this)">' + text + '</textarea><button class="delbtn" onclick="document.getElementById(\'' + id + '\').remove()" title="Remove">×</button>';
+  list.appendChild(li);
+  const ta = li.querySelector('.inc-item-ta');
+  setTimeout(() => autoH(ta), 0);
+}
+
+// ── Payment Terms (editable) ─────────────────────────────────────────────
+let payuid = 0;
+function addPaymentItem(label, val, sub){
+  label = label || ''; val = val || ''; sub = sub || '';
+  payuid++; const id = 'pay' + payuid;
+  const wrap = document.getElementById('payment-body');
+  const div = document.createElement('div');
+  div.className = 'pay-item';
+  div.id = id;
+  div.innerHTML = '<div class="pay-item-fields"><input class="pay-lbl-inp" placeholder="Label" value="' + label + '"><input class="pay-val-inp" placeholder="Value" value="' + val + '"><textarea class="pay-sub-ta" rows="1" placeholder="Description" oninput="autoH(this)">' + sub + '</textarea></div><button class="delbtn" onclick="document.getElementById(\'' + id + '\').remove()" title="Remove">×</button>';
+  wrap.appendChild(div);
+  const ta = div.querySelector('.pay-sub-ta');
+  setTimeout(() => autoH(ta), 0);
+}
+
 function recalc(){
   const svgs = parseInt(document.getElementById('svgs').value) || 30;
 
@@ -583,6 +652,26 @@ addPkg('Jar (60 capsule, white HDPE)', 0.42, 1);
 addPkg('Cap (child-resistant)', 0.11, 1);
 addPkg('Silica gel packet', 0.03, 1);
 addPkg('Label (printed)', 0.18, 1);
+
+addTimelineStep('Week 1', 'Deposit & label approval');
+addTimelineStep('Week 2–3', 'Raw material sourcing & lab testing');
+addTimelineStep('Week 4–5', 'Blending, encapsulation & filling');
+addTimelineStep('Week 6', 'Final QC & shipping dispatch');
+
+addIncItem('yes', 'Raw materials');
+addIncItem('yes', 'Capsule filling');
+addIncItem('yes', 'Pouch filling & standard packaging');
+addIncItem('yes', 'Quality control & batch testing');
+addIncItem('yes', 'GMP manufacturing & production labor');
+
+addIncItem('no', 'Label printing (if required)');
+addIncItem('no', 'Custom packaging');
+addIncItem('no', 'Design services');
+addIncItem('no', 'Shipping & logistics');
+
+addPaymentItem('Initial Deposit', '50%', 'To begin production');
+addPaymentItem('Final Balance', '50%', 'Pre-shipment');
+addPaymentItem('Production Time', '4–6 Weeks', 'After deposit & label approval');
 </script>
 
 </body>
