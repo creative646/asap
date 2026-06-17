@@ -8,15 +8,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 
-/* ── DESIGN TOKENS — change these to restyle everything ─────────────────
-   Edit the values below to customize colors, radius, fonts             */
 :root{
-  --brand:        #6B3FA0;   /* main accent / purple */
-  --brand-dark:   #4E2D7A;   /* hover state */
-  --brand-light:  #F4EFF9;   /* tint background */
-  --hero-bg:      #F4EFF9;   /* hero section background  ← was black */
-  --hero-text:    #1A1A1A;   /* hero heading color */
-  --hero-sub:     #6B7280;   /* hero subtext */
+  --brand:        #6B3FA0;
+  --brand-dark:   #4E2D7A;
+  --brand-light:  #F4EFF9;
+  --hero-bg:      #F4EFF9;
+  --hero-text:    #1A1A1A;
+  --hero-sub:     #6B7280;
   --card-bg:      #FFFFFF;
   --page-bg:      #F2F2F7;
   --border:       #E5E7EB;
@@ -48,15 +46,10 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 /* PAGE */
 .page{max-width:860px;margin:28px auto;padding:0 20px 60px}
 
-/* ── HERO ────────────────────────────────────────────────────────────────
-   Two-column: left = editable proposal info, right = specs table       */
+/* HERO */
 .hero{background:var(--hero-bg);border-radius:var(--radius-hero);border:1px solid var(--brand-light);padding:28px 32px;margin-bottom:24px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start}
-
-/* LEFT: editable fields */
 .hero-left{}
 .hero-eyebrow{font-size:10px;font-weight:700;color:var(--brand);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
-.hero-title-row{display:flex;align-items:baseline;gap:0;margin-bottom:10px;flex-wrap:wrap}
-.hero-title-row .label{font-size:11px;font-weight:600;color:var(--brand);min-width:110px;padding-top:3px}
 .editable{font-size:22px;font-weight:800;color:var(--hero-text);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;word-break:break-word}
 .editable:focus{border-bottom:2px solid var(--brand);color:var(--brand)}
 .editable.sm{font-size:13px;font-weight:500;color:var(--hero-sub)}
@@ -66,29 +59,30 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .hero-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
 .hbadge{background:rgba(107,63,160,.1);border:1px solid rgba(107,63,160,.2);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--brand);font-weight:500}
 
-/* RIGHT: specs table */
 .hero-right{flex-shrink:0;min-width:220px}
 .hero-tag{background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.07em;text-transform:uppercase;display:inline-block;margin-bottom:14px}
 .specs-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff}
-.spec-row{display:flex;align-items:center;padding:9px 13px;border-bottom:1px solid var(--border);gap:8px}
+.spec-row{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:9px 13px;border-bottom:1px solid var(--border)}
 .spec-row:last-child{border-bottom:none}
-.spec-row .sk{font-size:10px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.05em;min-width:80px;flex-shrink:0}
-.spec-row .sv{font-size:12px;font-weight:600;color:var(--text)}
-
-
+.spec-row .sk{font-size:10px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
 
 /* COST PANEL */
 .cost-panel{background:#2D1F6E;border-radius:var(--radius-card);padding:18px 20px;color:#fff}
 .cp-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
 .cp-sub{font-size:11px;color:rgba(255,255,255,.4);font-weight:400}
-.cp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
 .cp-lbl{font-size:12px;color:rgba(255,255,255,.55)}
-.cp-val{font-size:14px;font-weight:600;color:#fff;font-variant-numeric:tabular-nums}
+.cp-val{font-size:14px;font-weight:600;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
 .cp-val-sm{font-size:12px;color:rgba(255,255,255,.7)}
 .cp-divider{height:1px;background:rgba(255,255,255,.1);margin:12px 0}
 .cp-total-lbl{font-size:12px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:6px}
 .cp-total-val{font-size:28px;font-weight:800;color:#FFD60A;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
-
+.cp-tier-select{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.cp-tier-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:2px}
+.cp-tier-btns{display:flex;flex-wrap:wrap;gap:6px}
+.cp-tier-btn{flex:1;min-width:60px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:6px 4px;font-size:10px;color:rgba(255,255,255,.7);cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all .15s}
+.cp-tier-btn:hover{background:rgba(255,255,255,.15)}
+.cp-tier-btn.active{background:#fff;color:var(--brand);font-weight:700;border-color:#fff}
 
 /* Auto-height textareas */
 .spec-inp{font-size:12px;font-weight:600;color:var(--text);border:none;outline:none;background:transparent;font-family:'Inter',sans-serif;width:100%;resize:none;overflow:hidden;line-height:1.5;min-height:20px;padding:0;display:block}
@@ -115,24 +109,9 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .itbl tbody tr:last-child td{border-bottom:none}
 .itbl tbody tr:hover td{background:#FAFAFA}
 
-/* Исправленные поля ввода */
-.itbl td input {
-  width: 100%;
-  padding: 9px 12px;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 13px;
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-}
-.itbl td input.ar {
-  text-align: right;
-}
-.itbl td input:focus {
-  background: var(--brand-light);
-  color: var(--brand);
-}
+.itbl td input{width:100%;padding:9px 12px;border:none;outline:none;background:transparent;font-size:13px;color:var(--text);font-family:'Inter',sans-serif}
+.itbl td input.ar{text-align:right}
+.itbl td input:focus{background:var(--brand-light);color:var(--brand)}
 
 .itbl td.num{padding:9px 12px;text-align:right;font-size:12px;color:var(--text-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 .itbl td.dc{text-align:center;width:36px;padding:0 5px}
@@ -150,16 +129,6 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .spill input:focus{color:var(--brand)}
 .spill .u{font-size:11px;color:var(--text-hint)}
 
-/* RESULTS */
-.res-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
-.rcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px 15px}
-.rcard .rl{font-size:10px;font-weight:700;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-.rcard .rv{font-size:18px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
-.total-card{background:var(--brand);border-radius:12px;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
-.total-card .rl{font-size:12px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:3px}
-.total-card .sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:3px}
-.total-card .rv{font-size:30px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
-
 /* PRICING */
 .ptbl{width:100%;border-collapse:collapse;font-size:13px}
 .ptbl th{font-size:10px;font-weight:700;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;padding:9px 16px;text-align:left;border-bottom:1px solid var(--border);background:#F9FAFB}
@@ -170,18 +139,15 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .gbadge{display:inline-flex;align-items:center;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
 
 /* TIMELINE */
-.tl-grid{display:grid;grid-template-columns:1fr 1fr}
 .tl-item{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border)}
-.tl-item:nth-child(odd){border-right:1px solid var(--border)}
-.tl-item:nth-last-child(-n+2){border-bottom:none}
+.tl-item:last-child{border-bottom:none}
 .tl-n{width:24px;height:24px;background:var(--brand-light);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand);flex-shrink:0}
 .tl-week{font-size:10px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
 .tl-desc{font-size:13px;color:var(--text)}
 
 /* PAYMENT */
-.pay-grid{display:grid;grid-template-columns:1fr 1fr 1fr}
-.pay-item{padding:13px 16px;border-right:1px solid var(--border)}
-.pay-item:last-child{border-right:none}
+.pay-item{padding:13px 16px;border-bottom:1px solid var(--border)}
+.pay-item:last-child{border-bottom:none}
 .pay-lbl{font-size:10px;color:var(--text-hint);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
 .pay-val{font-size:14px;font-weight:700}
 .pay-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
@@ -203,8 +169,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .footer{text-align:center;font-size:11px;color:var(--text-hint);margin-top:32px;padding-top:18px;border-top:1px solid var(--border)}
 .footer strong{color:var(--text-muted)}
 
-
-/* ── MOBILE ──────────────────────────────────────────────────────────── */
+/* MOBILE */
 @media(max-width:700px){
   .toolbar{padding:10px 16px}
   .tb-logo svg{height:22px}
@@ -214,23 +179,17 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   .hero{grid-template-columns:1fr;gap:16px;padding:20px 18px;border-radius:14px}
   .hero-right{min-width:unset;width:100%}
   .facts-layout{grid-template-columns:1fr!important}
-  .cost-panel{margin-top:0}
-  .res-grid{grid-template-columns:1fr 1fr}
-  .total-card{flex-direction:column;align-items:flex-start;gap:6px}
-  .total-card .rv{font-size:24px}
   .itbl th:nth-child(4),.itbl td:nth-child(4){display:none}
   .itbl th{font-size:9px;padding:7px 8px}
   .itbl td input{padding:8px 8px;font-size:12px}
   .itbl td.num{padding:8px 8px;font-size:11px}
   .ptbl td:nth-child(3),.ptbl th:nth-child(3){display:none}
-  .pay-grid{grid-template-columns:1fr}
-  .pay-item{border-right:none;border-bottom:1px solid var(--border)}
-  .pay-item:last-child{border-bottom:none}
   .inc-grid{grid-template-columns:1fr}
   .inc-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
   .settings{flex-direction:column}
   .editable{font-size:18px}
-  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  .two-col{grid-template-columns:1fr!important}
+  .cp-tier-btn{min-width:50px;font-size:9px}
 }
 @media(max-width:400px){
   .hero-badges{gap:4px}
@@ -240,19 +199,13 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 /* PRINT */
 @media print{
   body{background:#fff;font-size:11px}
-  .toolbar,.add-btn,.delbtn,.settings,#csv-tip{display:none!important}
+  .toolbar,.add-btn,.delbtn,.settings,#csv-tip,.cp-tier-select{display:none!important}
   .page{margin:0;padding:10px 14px;max-width:100%}
-  .hero,.total-card,.cost-panel{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero,.cost-panel{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   input,textarea{pointer-events:none}
   .facts-layout{grid-template-columns:1fr 180px!important;gap:8px!important}
   .itbl{font-size:10px;table-layout:fixed;width:100%}
   .itbl th{padding:5px 6px;font-size:8px;white-space:nowrap}
-  .itbl th:nth-child(1){width:38%}
-  .itbl th:nth-child(2){width:12%}
-  .itbl th:nth-child(3){width:12%}
-  .itbl th:nth-child(4){width:12%}
-  .itbl th:nth-child(5){width:13%}
-  .itbl th:nth-child(6){width:6%}
   .itbl td input{padding:5px 6px;font-size:10px}
   .itbl td.num{padding:5px 6px;font-size:9px}
   .cost-panel{padding:10px 12px}
@@ -263,7 +216,6 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   .hero{padding:16px 20px;border-radius:12px}
   .editable{font-size:18px}
   .sec-title{font-size:8px;letter-spacing:.06em}
-  .rcard .rv{font-size:14px}
   .ptbl{font-size:11px}
   .ptbl th,.ptbl td{padding:7px 10px}
   .tl-desc{font-size:11px}
@@ -276,7 +228,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 
 <div class="toolbar">
   <div class="tb-brand">
-    <div class="tb-logo"><svg  height="26" viewBox="0 0 219 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M21.1406 19.8192L26.9719 3.83984H32.9426L38.7739 19.8192H33.3376L32.6638 17.5663H27.0649L26.3911 19.8192H21.1406ZM28.1335 13.9895H31.6184L30.8517 11.4347C30.7898 11.2489 30.7201 11.0244 30.6426 10.7611C30.5652 10.4979 30.4878 10.2192 30.4103 9.925C30.3329 9.63081 30.2554 9.34436 30.178 9.06565C30.1005 8.77146 30.0309 8.51597 29.9689 8.2992H29.783C29.7211 8.57791 29.6359 8.89533 29.5275 9.25146C29.4346 9.60759 29.3339 9.9792 29.2255 10.3663C29.117 10.7379 29.0086 11.094 28.9002 11.4347L28.1335 13.9895Z" fill="#1E1E1E"/> <path d="M49.0513 20.0983C47.9517 20.0983 46.9217 20.0131 45.9614 19.8428C45.0166 19.688 44.1803 19.417 43.4523 19.0299C42.7399 18.6273 42.1746 18.0777 41.7564 17.3809C41.3537 16.6686 41.1523 15.7783 41.1523 14.7099V14.5938C41.1523 14.5318 41.1601 14.4699 41.1756 14.408H46.0311C46.0156 14.4699 46.0079 14.5318 46.0079 14.5938V14.7331C46.0079 15.1977 46.1163 15.5538 46.3331 15.8015C46.55 16.0493 46.852 16.2196 47.2392 16.3125C47.6419 16.3899 48.0911 16.4286 48.5867 16.4286H49.1675C49.3843 16.4131 49.5857 16.3899 49.7715 16.3589C49.9729 16.3125 50.151 16.2506 50.3059 16.1731C50.4762 16.0957 50.6079 15.9951 50.7008 15.8712C50.7937 15.7318 50.8402 15.5615 50.8402 15.3602C50.8402 15.066 50.7086 14.8338 50.4453 14.6635C50.182 14.4931 49.8257 14.346 49.3766 14.2222C48.9274 14.0983 48.424 13.9822 47.8665 13.8738C47.3089 13.7654 46.7281 13.6415 46.1241 13.5022C45.52 13.3473 44.9392 13.1538 44.3816 12.9215C43.8241 12.6893 43.3207 12.3951 42.8715 12.0389C42.4224 11.6673 42.0661 11.2106 41.8028 10.6686C41.5395 10.1112 41.4079 9.44539 41.4079 8.6712C41.4079 7.74217 41.6015 6.95249 41.9887 6.30217C42.3759 5.65185 42.9025 5.12539 43.5685 4.72281C44.25 4.32023 45.0166 4.02604 45.8685 3.84023C46.7358 3.65443 47.6419 3.56152 48.5867 3.56152C49.5315 3.56152 50.4453 3.66217 51.2816 3.86346C52.1335 4.04927 52.8846 4.34346 53.5352 4.74604C54.1857 5.14862 54.6968 5.65959 55.0685 6.27894C55.4402 6.8983 55.6338 7.63378 55.6493 8.48539V8.7641H50.8402V8.6712C50.8402 8.39249 50.7705 8.12927 50.6311 7.88152C50.4917 7.63378 50.2671 7.43249 49.9574 7.27765C49.6631 7.12281 49.2682 7.04539 48.7725 7.04539C48.3079 7.04539 47.9129 7.09185 47.5877 7.18475C47.2779 7.27765 47.0456 7.40927 46.8907 7.57959C46.7358 7.73443 46.6584 7.90475 46.6584 8.09056C46.6584 8.38475 46.79 8.62475 47.0533 8.81056C47.3166 8.99636 47.6729 9.1512 48.122 9.27507C48.5712 9.39894 49.0746 9.51507 49.6321 9.62346C50.1897 9.73185 50.7705 9.85572 51.3746 9.99507C51.9786 10.1189 52.5594 10.2893 53.117 10.506C53.6746 10.7228 54.1779 11.0093 54.6271 11.3654C55.0762 11.706 55.4325 12.1318 55.6958 12.6428C55.9591 13.1538 56.0907 13.7809 56.0907 14.5241C56.0907 15.8402 55.7809 16.9086 55.1614 17.7293C54.5574 18.5499 53.721 19.1538 52.6523 19.5409C51.5991 19.9125 50.3988 20.0983 49.0513 20.0983Z" fill="#1E1E1E"/> <path d="M58.3125 19.8192L64.1438 3.83984H70.1145L75.9458 19.8192H70.5095L69.8357 17.5663H64.2367L63.563 19.8192H58.3125ZM65.3054 13.9895H68.7903L68.0236 11.4347C67.9616 11.2489 67.892 11.0244 67.8145 10.7611C67.7371 10.4979 67.6596 10.2192 67.5822 9.925C67.5047 9.63081 67.4273 9.34436 67.3499 9.06565C67.2724 8.77146 67.2027 8.51597 67.1408 8.2992H66.9549C66.893 8.57791 66.8078 8.89533 66.6994 9.25146C66.6064 9.60759 66.5058 9.9792 66.3973 10.3663C66.2889 10.7379 66.1805 11.094 66.0721 11.4347L65.3054 13.9895Z" fill="#1E1E1E"/> <path d="M79.0449 19.8192V3.83984H88.4772C89.484 3.83984 90.3668 4.0721 91.1257 4.53662C91.9001 4.98565 92.5042 5.61275 92.9378 6.41791C93.3715 7.22307 93.5883 8.15984 93.5883 9.22823C93.5883 10.2966 93.3638 11.2876 92.9146 12.1082C92.4809 12.9134 91.8769 13.5405 91.1025 13.9895C90.3436 14.4386 89.4685 14.6631 88.4772 14.6631H84.1793V19.8192H79.0449ZM84.1793 10.9237H86.758C87.3001 10.9237 87.7028 10.7844 87.9661 10.5057C88.2449 10.2269 88.3843 9.81662 88.3843 9.27468C88.3843 8.90307 88.3224 8.60113 88.1984 8.36888C88.09 8.12113 87.9119 7.93533 87.6641 7.81146C87.4318 7.68759 87.1298 7.62565 86.758 7.62565H84.1793V10.9237Z" fill="#1E1E1E"/> <path d="M101.15 19.8192V3.83984H105.518L110.49 9.57662C110.629 9.73146 110.815 9.95597 111.047 10.2502C111.28 10.5444 111.512 10.8463 111.744 11.156C111.992 11.4502 112.178 11.6902 112.302 11.876L112.418 11.8295C112.403 11.396 112.395 10.9702 112.395 10.5521V3.83984H117.065V19.8192H112.72L107.121 13.4321C106.858 13.1224 106.633 12.8437 106.447 12.596C106.261 12.3327 106.083 12.085 105.913 11.8527L105.797 11.8992C105.812 12.1934 105.82 12.4876 105.82 12.7818V19.8192H101.15Z" fill="#1E1E1E"/> <path d="M125.568 20.0976C124.112 20.0976 123.035 19.695 122.338 18.8899C121.641 18.0847 121.293 16.9544 121.293 15.4989V7.55566H125.916V14.9415C125.916 15.1892 125.947 15.4215 126.009 15.6382C126.087 15.855 126.187 16.0408 126.311 16.1957C126.435 16.3505 126.598 16.4744 126.799 16.5673C127 16.6447 127.225 16.6834 127.473 16.6834C127.86 16.6834 128.193 16.5982 128.472 16.4279C128.766 16.2421 128.991 16.0021 129.145 15.7079C129.316 15.4137 129.401 15.0963 129.401 14.7557V7.55566H134.024V19.8189H130.237L130.005 17.9608H129.842C129.548 18.4099 129.169 18.797 128.704 19.1221C128.255 19.4473 127.759 19.6873 127.217 19.8421C126.675 20.0124 126.125 20.0976 125.568 20.0976Z" fill="#1E1E1E"/> <path d="M143.201 20.0979C142.365 20.0979 141.621 20.005 140.971 19.8192C140.336 19.6179 139.84 19.2773 139.484 18.7973C139.128 18.3173 138.95 17.6592 138.95 16.8231V10.6915H137.23V7.55597H139.136L140.135 3.83984H143.573V7.55597H146.175V10.6915H143.573V15.3598C143.573 15.8863 143.658 16.2889 143.828 16.5676C143.999 16.8308 144.347 16.9624 144.874 16.9624H146.175V19.6798C145.927 19.7573 145.617 19.8269 145.246 19.8889C144.889 19.9663 144.525 20.0205 144.154 20.0515C143.797 20.0824 143.48 20.0979 143.201 20.0979Z" fill="#1E1E1E"/> <path d="M149.48 19.8191V7.55584H153.267L153.569 9.41391H153.732C153.933 8.94939 154.189 8.55455 154.499 8.22939C154.824 7.90423 155.196 7.66423 155.614 7.50939C156.032 7.33907 156.473 7.25391 156.938 7.25391C157.248 7.25391 157.527 7.28487 157.774 7.34681C158.022 7.40875 158.2 7.47068 158.309 7.53262V11.4113H156.822C156.326 11.4113 155.9 11.481 155.544 11.6204C155.203 11.7442 154.925 11.9378 154.708 12.201C154.506 12.4487 154.352 12.7584 154.243 13.13C154.15 13.4862 154.104 13.8965 154.104 14.361V19.8191H149.48Z" fill="#1E1E1E"/> <path d="M160.965 6.11595V2.98047H165.588V6.11595H160.965ZM160.965 19.8192V7.55595H165.588V19.8192H160.965Z" fill="#1E1E1E"/> <path d="M174.75 20.0979C173.914 20.0979 173.17 20.005 172.52 19.8192C171.885 19.6179 171.389 19.2773 171.033 18.7973C170.677 18.3173 170.498 17.6592 170.498 16.8231V10.6915H168.779V7.55597H170.684L171.683 3.83984H175.122V7.55597H177.724V10.6915H175.122V15.3598C175.122 15.8863 175.207 16.2889 175.377 16.5676C175.548 16.8308 175.896 16.9624 176.423 16.9624H177.724V19.6798C177.476 19.7573 177.166 19.8269 176.794 19.8889C176.438 19.9663 176.074 20.0205 175.703 20.0515C175.346 20.0824 175.029 20.0979 174.75 20.0979Z" fill="#1E1E1E"/> <path d="M181.031 6.11595V2.98047H185.654V6.11595H181.031ZM181.031 19.8192V7.55595H185.654V19.8192H181.031Z" fill="#1E1E1E"/> <path d="M195.953 20.098C194.559 20.098 193.343 19.8657 192.305 19.4012C191.283 18.9212 190.485 18.209 189.912 17.2644C189.339 16.3044 189.053 15.1122 189.053 13.6877C189.053 12.2632 189.339 11.0554 189.912 10.1109C190.485 9.16638 191.283 8.46186 192.305 7.99734C193.343 7.51734 194.559 7.27734 195.953 7.27734C197.347 7.27734 198.562 7.51734 199.6 7.99734C200.638 8.46186 201.443 9.16638 202.016 10.1109C202.589 11.0554 202.876 12.2477 202.876 13.6877C202.876 15.1277 202.589 16.3044 202.016 17.2644C201.443 18.209 200.638 18.9212 199.6 19.4012C198.562 19.8657 197.347 20.098 195.953 20.098ZM195.953 16.9625C196.495 16.9625 196.936 16.8619 197.277 16.6606C197.618 16.4438 197.866 16.1419 198.02 15.7548C198.175 15.3677 198.253 14.9032 198.253 14.3612V13.0373C198.253 12.4954 198.175 12.0309 198.02 11.6438C197.866 11.2412 197.618 10.9393 197.277 10.738C196.936 10.5212 196.495 10.4128 195.953 10.4128C195.411 10.4128 194.969 10.5212 194.628 10.738C194.303 10.9393 194.063 11.2412 193.908 11.6438C193.753 12.0309 193.676 12.4954 193.676 13.0373V14.3612C193.676 14.9032 193.753 15.3677 193.908 15.7548C194.063 16.1419 194.303 16.4438 194.628 16.6606C194.969 16.8619 195.411 16.9625 195.953 16.9625Z" fill="#1E1E1E"/> <path d="M206.27 19.8193V7.55605H210.056L210.358 9.41412H210.521C210.846 8.93412 211.226 8.53928 211.659 8.2296C212.093 7.90444 212.573 7.66444 213.1 7.5096C213.626 7.35476 214.169 7.27734 214.726 7.27734C215.702 7.27734 216.499 7.46315 217.119 7.83476C217.754 8.19089 218.226 8.7096 218.536 9.39089C218.846 10.0722 219.001 10.9006 219.001 11.8761V19.8193H214.378V12.4335C214.378 12.1702 214.339 11.938 214.261 11.7367C214.199 11.5199 214.107 11.3341 213.983 11.1793C213.859 11.0244 213.696 10.9083 213.495 10.8309C213.309 10.738 213.084 10.6915 212.821 10.6915C212.434 10.6915 212.093 10.7844 211.799 10.9702C211.52 11.1406 211.295 11.3728 211.125 11.667C210.97 11.9457 210.893 12.2631 210.893 12.6193V19.8193H206.27Z" fill="#1E1E1E"/> <path d="M6.17205 2.31948C6.107 3.23613 5.9103 4.34013 5.15757 5.33264C4.55972 6.12077 3.1534 6.32981 2.38363 6.4351C1.00983 6.624 0 7.49729 0 8.80877C0 9.93135 0.696969 10.8697 1.93602 11.1468C3.09919 11.4085 4.0734 11.6175 4.80134 12.2834C5.45494 12.8841 5.88087 13.7667 6.15966 15.3879C6.39353 16.7505 7.26087 17.5835 8.49527 17.5835C9.72968 17.5835 10.8386 16.5182 10.8386 15.2067C10.8386 13.8952 9.92638 12.9786 8.64086 12.8377C7.02699 12.6426 4.71925 11.215 4.71925 8.96361C4.71925 6.71226 6.44928 5.21032 8.70127 4.74271C10.0534 4.47793 10.8541 3.62323 10.8541 2.37677C10.8541 1.06529 9.80403 0 8.51076 0C7.2175 0 6.24174 0.986322 6.1705 2.31948H6.17205Z" fill="#1E1E1E"/> <path d="M12.7231 8.73297C12.7556 9.46072 12.9848 10.7536 13.7376 11.7461C14.3354 12.5343 15.7417 12.7433 16.5115 12.8486C17.8853 13.0375 18.8951 13.9108 18.8951 15.2223C18.8951 16.3448 18.1982 17.2832 16.9591 17.5603C15.796 17.822 14.8217 18.031 14.0938 18.6984C13.4402 19.2992 13.0143 20.1817 12.7355 21.8029C12.5016 23.1655 11.6343 23.9985 10.3999 23.9985C9.16546 23.9985 8.0565 22.9332 8.0565 21.6217C8.0565 20.3103 8.96876 19.3936 10.2543 19.2527C11.8681 19.0576 14.1759 17.63 14.1759 15.3787C14.1759 13.1273 12.4459 11.6254 10.1939 11.1577C8.84176 10.893 8.04102 10.0383 8.04102 8.79181C8.04102 7.48033 9.09112 6.41504 10.3844 6.41504C11.6776 6.41504 12.6937 7.44781 12.7246 8.73452L12.7231 8.73297Z" fill="#1E1E1E"/> </svg></div>
+    <div class="tb-logo"><svg height="26" viewBox="0 0 219 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M21.1406 19.8192L26.9719 3.83984H32.9426L38.7739 19.8192H33.3376L32.6638 17.5663H27.0649L26.3911 19.8192H21.1406ZM28.1335 13.9895H31.6184L30.8517 11.4347C30.7898 11.2489 30.7201 11.0244 30.6426 10.7611C30.5652 10.4979 30.4878 10.2192 30.4103 9.925C30.3329 9.63081 30.2554 9.34436 30.178 9.06565C30.1005 8.77146 30.0309 8.51597 29.9689 8.2992H29.783C29.7211 8.57791 29.6359 8.89533 29.5275 9.25146C29.4346 9.60759 29.3339 9.9792 29.2255 10.3663C29.117 10.7379 29.0086 11.094 28.9002 11.4347L28.1335 13.9895Z" fill="#1E1E1E"/> <path d="M49.0513 20.0983C47.9517 20.0983 46.9217 20.0131 45.9614 19.8428C45.0166 19.688 44.1803 19.417 43.4523 19.0299C42.7399 18.6273 42.1746 18.0777 41.7564 17.3809C41.3537 16.6686 41.1523 15.7783 41.1523 14.7099V14.5938C41.1523 14.5318 41.1601 14.4699 41.1756 14.408H46.0311C46.0156 14.4699 46.0079 14.5318 46.0079 14.5938V14.7331C46.0079 15.1977 46.1163 15.5538 46.3331 15.8015C46.55 16.0493 46.852 16.2196 47.2392 16.3125C47.6419 16.3899 48.0911 16.4286 48.5867 16.4286H49.1675C49.3843 16.4131 49.5857 16.3899 49.7715 16.3589C49.9729 16.3125 50.151 16.2506 50.3059 16.1731C50.4762 16.0957 50.6079 15.9951 50.7008 15.8712C50.7937 15.7318 50.8402 15.5615 50.8402 15.3602C50.8402 15.066 50.7086 14.8338 50.4453 14.6635C50.182 14.4931 49.8257 14.346 49.3766 14.2222C48.9274 14.0983 48.424 13.9822 47.8665 13.8738C47.3089 13.7654 46.7281 13.6415 46.1241 13.5022C45.52 13.3473 44.9392 13.1538 44.3816 12.9215C43.8241 12.6893 43.3207 12.3951 42.8715 12.0389C42.4224 11.6673 42.0661 11.2106 41.8028 10.6686C41.5395 10.1112 41.4079 9.44539 41.4079 8.6712C41.4079 7.74217 41.6015 6.95249 41.9887 6.30217C42.3759 5.65185 42.9025 5.12539 43.5685 4.72281C44.25 4.32023 45.0166 4.02604 45.8685 3.84023C46.7358 3.65443 47.6419 3.56152 48.5867 3.56152C49.5315 3.56152 50.4453 3.66217 51.2816 3.86346C52.1335 4.04927 52.8846 4.34346 53.5352 4.74604C54.1857 5.14862 54.6968 5.65959 55.0685 6.27894C55.4402 6.8983 55.6338 7.63378 55.6493 8.48539V8.7641H50.8402V8.6712C50.8402 8.39249 50.7705 8.12927 50.6311 7.88152C50.4917 7.63378 50.2671 7.43249 49.9574 7.27765C49.6631 7.12281 49.2682 7.04539 48.7725 7.04539C48.3079 7.04539 47.9129 7.09185 47.5877 7.18475C47.2779 7.27765 47.0456 7.40927 46.8907 7.57959C46.7358 7.73443 46.6584 7.90475 46.6584 8.09056C46.6584 8.38475 46.79 8.62475 47.0533 8.81056C47.3166 8.99636 47.6729 9.1512 48.122 9.27507C48.5712 9.39894 49.0746 9.51507 49.6321 9.62346C50.1897 9.73185 50.7705 9.85572 51.3746 9.99507C51.9786 10.1189 52.5594 10.2893 53.117 10.506C53.6746 10.7228 54.1779 11.0093 54.6271 11.3654C55.0762 11.706 55.4325 12.1318 55.6958 12.6428C55.9591 13.1538 56.0907 13.7809 56.0907 14.5241C56.0907 15.8402 55.7809 16.9086 55.1614 17.7293C54.5574 18.5499 53.721 19.1538 52.6523 19.5409C51.5991 19.9125 50.3988 20.0983 49.0513 20.0983Z" fill="#1E1E1E"/> <path d="M58.3125 19.8192L64.1438 3.83984H70.1145L75.9458 19.8192H70.5095L69.8357 17.5663H64.2367L63.563 19.8192H58.3125ZM65.3054 13.9895H68.7903L68.0236 11.4347C67.9616 11.2489 67.892 11.0244 67.8145 10.7611C67.7371 10.4979 67.6596 10.2192 67.5822 9.925C67.5047 9.63081 67.4273 9.34436 67.3499 9.06565C67.2724 8.77146 67.2027 8.51597 67.1408 8.2992H66.9549C66.893 8.57791 66.8078 8.89533 66.6994 9.25146C66.6064 9.60759 66.5058 9.9792 66.3973 10.3663C66.2889 10.7379 66.1805 11.094 66.0721 11.4347L65.3054 13.9895Z" fill="#1E1E1E"/> <path d="M79.0449 19.8192V3.83984H88.4772C89.484 3.83984 90.3668 4.0721 91.1257 4.53662C91.9001 4.98565 92.5042 5.61275 92.9378 6.41791C93.3715 7.22307 93.5883 8.15984 93.5883 9.22823C93.5883 10.2966 93.3638 11.2876 92.9146 12.1082C92.4809 12.9134 91.8769 13.5405 91.1025 13.9895C90.3436 14.4386 89.4685 14.6631 88.4772 14.6631H84.1793V19.8192H79.0449ZM84.1793 10.9237H86.758C87.3001 10.9237 87.7028 10.7844 87.9661 10.5057C88.2449 10.2269 88.3843 9.81662 88.3843 9.27468C88.3843 8.90307 88.3224 8.60113 88.1984 8.36888C88.09 8.12113 87.9119 7.93533 87.6641 7.81146C87.4318 7.68759 87.1298 7.62565 86.758 7.62565H84.1793V10.9237Z" fill="#1E1E1E"/> <path d="M101.15 19.8192V3.83984H105.518L110.49 9.57662C110.629 9.73146 110.815 9.95597 111.047 10.2502C111.28 10.5444 111.512 10.8463 111.744 11.156C111.992 11.4502 112.178 11.6902 112.302 11.876L112.418 11.8295C112.403 11.396 112.395 10.9702 112.395 10.5521V3.83984H117.065V19.8192H112.72L107.121 13.4321C106.858 13.1224 106.633 12.8437 106.447 12.596C106.261 12.3327 106.083 12.085 105.913 11.8527L105.797 11.8992C105.812 12.1934 105.82 12.4876 105.82 12.7818V19.8192H101.15Z" fill="#1E1E1E"/> <path d="M125.568 20.0976C124.112 20.0976 123.035 19.695 122.338 18.8899C121.641 18.0847 121.293 16.9544 121.293 15.4989V7.55566H125.916V14.9415C125.916 15.1892 125.947 15.4215 126.009 15.6382C126.087 15.855 126.187 16.0408 126.311 16.1957C126.435 16.3505 126.598 16.4744 126.799 16.5673C127 16.6447 127.225 16.6834 127.473 16.6834C127.86 16.6834 128.193 16.5982 128.472 16.4279C128.766 16.2421 128.991 16.0021 129.145 15.7079C129.316 15.4137 129.401 15.0963 129.401 14.7557V7.55566H134.024V19.8189H130.237L130.005 17.9608H129.842C129.548 18.4099 129.169 18.797 128.704 19.1221C128.255 19.4473 127.759 19.6873 127.217 19.8421C126.675 20.0124 126.125 20.0976 125.568 20.0976Z" fill="#1E1E1E"/> <path d="M143.201 20.0979C142.365 20.0979 141.621 20.005 140.971 19.8192C140.336 19.6179 139.84 19.2773 139.484 18.7973C139.128 18.3173 138.95 17.6592 138.95 16.8231V10.6915H137.23V7.55597H139.136L140.135 3.83984H143.573V7.55597H146.175V10.6915H143.573V15.3598C143.573 15.8863 143.658 16.2889 143.828 16.5676C143.999 16.8308 144.347 16.9624 144.874 16.9624H146.175V19.6798C145.927 19.7573 145.617 19.8269 145.246 19.8889C144.889 19.9663 144.525 20.0205 144.154 20.0515C143.797 20.0824 143.48 20.0979 143.201 20.0979Z" fill="#1E1E1E"/> <path d="M149.48 19.8191V7.55584H153.267L153.569 9.41391H153.732C153.933 8.94939 154.189 8.55455 154.499 8.22939C154.824 7.90423 155.196 7.66423 155.614 7.50939C156.032 7.33907 156.473 7.25391 156.938 7.25391C157.248 7.25391 157.527 7.28487 157.774 7.34681C158.022 7.40875 158.2 7.47068 158.309 7.53262V11.4113H156.822C156.326 11.4113 155.9 11.481 155.544 11.6204C155.203 11.7442 154.925 11.9378 154.708 12.201C154.506 12.4487 154.352 12.7584 154.243 13.13C154.15 13.4862 154.104 13.8965 154.104 14.361V19.8191H149.48Z" fill="#1E1E1E"/> <path d="M160.965 6.11595V2.98047H165.588V6.11595H160.965ZM160.965 19.8192V7.55595H165.588V19.8192H160.965Z" fill="#1E1E1E"/> <path d="M174.75 20.0979C173.914 20.0979 173.17 20.005 172.52 19.8192C171.885 19.6179 171.389 19.2773 171.033 18.7973C170.677 18.3173 170.498 17.6592 170.498 16.8231V10.6915H168.779V7.55597H170.684L171.683 3.83984H175.122V7.55597H177.724V10.6915H175.122V15.3598C175.122 15.8863 175.207 16.2889 175.377 16.5676C175.548 16.8308 175.896 16.9624 176.423 16.9624H177.724V19.6798C177.476 19.7573 177.166 19.8269 176.794 19.8889C176.438 19.9663 176.074 20.0205 175.703 20.0515C175.346 20.0824 175.029 20.0979 174.75 20.0979Z" fill="#1E1E1E"/> <path d="M181.031 6.11595V2.98047H185.654V6.11595H181.031ZM181.031 19.8192V7.55595H185.654V19.8192H181.031Z" fill="#1E1E1E"/> <path d="M195.953 20.098C194.559 20.098 193.343 19.8657 192.305 19.4012C191.283 18.9212 190.485 18.209 189.912 17.2644C189.339 16.3044 189.053 15.1122 189.053 13.6877C189.053 12.2632 189.339 11.0554 189.912 10.1109C190.485 9.16638 191.283 8.46186 192.305 7.99734C193.343 7.51734 194.559 7.27734 195.953 7.27734C197.347 7.27734 198.562 7.51734 199.6 7.99734C200.638 8.46186 201.443 9.16638 202.016 10.1109C202.589 11.0554 202.876 12.2477 202.876 13.6877C202.876 15.1277 202.589 16.3044 202.016 17.2644C201.443 18.209 200.638 18.9212 199.6 19.4012C198.562 19.8657 197.347 20.098 195.953 20.098ZM195.953 16.9625C196.495 16.9625 196.936 16.8619 197.277 16.6606C197.618 16.4438 197.866 16.1419 198.02 15.7548C198.175 15.3677 198.253 14.9032 198.253 14.3612V13.0373C198.253 12.4954 198.175 12.0309 198.02 11.6438C197.866 11.2412 197.618 10.9393 197.277 10.738C196.936 10.5212 196.495 10.4128 195.953 10.4128C195.411 10.4128 194.969 10.5212 194.628 10.738C194.303 10.9393 194.063 11.2412 193.908 11.6438C193.753 12.0309 193.676 12.4954 193.676 13.0373V14.3612C193.676 14.9032 193.753 15.3677 193.908 15.7548C194.063 16.1419 194.303 16.4438 194.628 16.6606C194.969 16.8619 195.411 16.9625 195.953 16.9625Z" fill="#1E1E1E"/> <path d="M206.27 19.8193V7.55605H210.056L210.358 9.41412H210.521C210.846 8.93412 211.226 8.53928 211.659 8.2296C212.093 7.90444 212.573 7.66444 213.1 7.5096C213.626 7.35476 214.169 7.27734 214.726 7.27734C215.702 7.27734 216.499 7.46315 217.119 7.83476C217.754 8.19089 218.226 8.7096 218.536 9.39089C218.846 10.0722 219.001 10.9006 219.001 11.8761V19.8193H214.378V12.4335C214.378 12.1702 214.339 11.938 214.261 11.7367C214.199 11.5199 214.107 11.3341 213.983 11.1793C213.859 11.0244 213.696 10.9083 213.495 10.8309C213.309 10.738 213.084 10.6915 212.821 10.6915C212.434 10.6915 212.093 10.7844 211.799 10.9702C211.52 11.1406 211.295 11.3728 211.125 11.667C210.97 11.9457 210.893 12.2631 210.893 12.6193V19.8193H206.27Z" fill="#1E1E1E"/> <path d="M6.17205 2.31948C6.107 3.23613 5.9103 4.34013 5.15757 5.33264C4.55972 6.12077 3.1534 6.32981 2.38363 6.4351C1.00983 6.624 0 7.49729 0 8.80877C0 9.93135 0.696969 10.8697 1.93602 11.1468C3.09919 11.4085 4.0734 11.6175 4.80134 12.2834C5.45494 12.8841 5.88087 13.7667 6.15966 15.3879C6.39353 16.7505 7.26087 17.5835 8.49527 17.5835C9.72968 17.5835 10.8386 16.5182 10.8386 15.2067C10.8386 13.8952 9.92638 12.9786 8.64086 12.8377C7.02699 12.6426 4.71925 11.215 4.71925 8.96361C4.71925 6.71226 6.44928 5.21032 8.70127 4.74271C10.0534 4.47793 10.8541 3.62323 10.8541 2.37677C10.8541 1.06529 9.80403 0 8.51076 0C7.2175 0 6.24174 0.986322 6.1705 2.31948H6.17205Z" fill="#1E1E1E"/> <path d="M12.7231 8.73297C12.7556 9.46072 12.9848 10.7536 13.7376 11.7461C14.3354 12.5343 15.7417 12.7433 16.5115 12.8486C17.8853 13.0375 18.8951 13.9108 18.8951 15.2223C18.8951 16.3448 18.1982 17.2832 16.9591 17.5603C15.796 17.822 14.8217 18.031 14.0938 18.6984C13.4402 19.2992 13.0143 20.1817 12.7355 21.8029C12.5016 23.1655 11.6343 23.9985 10.3999 23.9985C9.16546 23.9985 8.0565 22.9332 8.0565 21.6217C8.0565 20.3103 8.96876 19.3936 10.2543 19.2527C11.8681 19.0576 14.1759 17.63 14.1759 15.3787C14.1759 13.1273 12.4459 11.6254 10.1939 11.1577C8.84176 10.893 8.04102 10.0383 8.04102 8.79181C8.04102 7.48033 9.09112 6.41504 10.3844 6.41504C11.6776 6.41504 12.6937 7.44781 12.7246 8.73452L12.7231 8.73297Z" fill="#1E1E1E"/> </svg></div>
   </div>
   <div class="tb-actions">
     <button class="btn btn-brand" onclick="window.print()">
@@ -289,23 +241,18 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 <div class="page">
 
   <div class="hero">
-
     <div class="hero-left">
       <div class="hero-eyebrow">Commercial Proposal</div>
-
       <div class="hero-field">
         <div class="hero-field-lbl">Product Name</div>
-        <input class="editable" id="prod-name" value="Name Formula">
+        <input class="editable" id="prod-name" value="Hair Support Formula">
       </div>
-
       <div style="margin-top:12px;font-size:13px;color:var(--hero-sub);line-height:2">
-        <input class="editable sm" id="prod-sub" value="Dietary Supplement">
-        
+        <input class="editable sm" id="prod-sub" value="Capsules Dietary Supplement">
         <div style="font-weight:700;color:var(--hero-text)">ASAP Nutrition Inc.</div>
         <div>3030 SW 42nd St, Fort Lauderdale, FL, USA</div>
         <div>GMP Compliant Manufacturing</div>
       </div>
-
       <div class="hero-badges">
         <span class="hbadge">✓ GMP Certified</span>
         <span class="hbadge">✓ NSF Certified</span>
@@ -317,31 +264,16 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
     <div class="hero-right">
       <div class="hero-tag">General Specifications</div>
       <div class="specs-list">
-        <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-          <span class="sk">Product</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
-        </div>
-        <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-          <span class="sk">Serving</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
-        </div>
-        <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-          <span class="sk">Unit Count</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
-        </div>
-        <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-          <span class="sk">Servings</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
-        </div>
-        <div class="spec-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-          <span class="sk">Other Ingr.</span>
-          <textarea class="spec-inp" rows="1" oninput="autoH(this)">Details</textarea>
-        </div>
+        <div class="spec-row"><span class="sk">Product</span><textarea class="spec-inp" rows="1" oninput="autoH(this)">Vegetable Capsules (HPMC)</textarea></div>
+        <div class="spec-row"><span class="sk">Serving</span><textarea class="spec-inp" rows="1" oninput="autoH(this)">2 Capsules</textarea></div>
+        <div class="spec-row"><span class="sk">Unit Count</span><textarea class="spec-inp" rows="1" oninput="autoH(this)">60 Caps / Pouch</textarea></div>
+        <div class="spec-row"><span class="sk">Servings</span><textarea class="spec-inp" rows="1" oninput="autoH(this)">30 per Container</textarea></div>
+        <div class="spec-row"><span class="sk">Other Ingr.</span><textarea class="spec-inp" rows="1" oninput="autoH(this)">Rice Flour, Nu-FLOW®</textarea></div>
       </div>
     </div>
-
   </div>
 
+  <!-- ACTIVE INGREDIENTS + COST PANEL -->
   <div class="sec">
     <div class="sec-hdr"><span class="sec-title">Supplement Facts · Per Serving</span></div>
     <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;align-items:start" class="facts-layout">
@@ -365,27 +297,36 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
           </button>
         </div>
         <div class="settings">
-          <div class="spill"><label>MFG &amp; PKG fee / unit</label><input type="number" id="mfg" value="8.88" min="0" step="0.01" oninput="recalc()"><span class="u">$</span></div>
           <div class="spill"><label>Servings / unit</label><input type="number" id="svgs" value="30" min="1" step="1" oninput="recalc()"></div>
         </div>
       </div>
 
       <div class="cost-panel">
         <div class="cp-title">Result <span class="cp-sub">per unit</span></div>
+
+        <div class="cp-tier-select">
+          <div class="cp-tier-lbl">Order quantity tier</div>
+          <div class="cp-tier-btns" id="tier-btns"></div>
+        </div>
+
         <div class="cp-row">
-          <span class="cp-lbl">Ingredient cost / unit</span>
+          <span class="cp-lbl">Ingredients / unit</span>
           <span class="cp-val" id="r-unit">$0.000</span>
         </div>
         <div class="cp-row">
-          <span class="cp-lbl">MFG &amp; PKG fee / unit</span>
-          <span class="cp-val" id="r-mfg">$8.88</span>
+          <span class="cp-lbl">Packaging / unit</span>
+          <span class="cp-val" id="r-pkg">$0.000</span>
+        </div>
+        <div class="cp-row">
+          <span class="cp-lbl">MFG fee / unit</span>
+          <span class="cp-val" id="r-mfg">$0.00</span>
         </div>
         <div class="cp-divider"></div>
         <div class="cp-total-lbl">Total cost / unit</div>
         <div class="cp-total-val" id="r-total">$0.00</div>
         <div class="cp-divider"></div>
         <div class="cp-row" style="margin-top:4px">
-          <span class="cp-lbl">Ingredient cost / serving</span>
+          <span class="cp-lbl">Ingredients / serving</span>
           <span class="cp-val cp-val-sm" id="r-serv">$0.0000</span>
         </div>
       </div>
@@ -393,39 +334,70 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
     </div>
   </div>
 
+  <!-- PACKAGING COMPONENTS -->
   <div class="sec">
-    <div class="sec-hdr"><span class="sec-title">Pricing Tiers</span></div>
+    <div class="sec-hdr"><span class="sec-title">Packaging Components</span><span class="sec-hint">Jar, cap, silica, label, etc.</span></div>
+    <div class="card">
+      <table class="itbl" id="ptbl">
+        <thead><tr>
+          <th style="width:58%">Component</th>
+          <th class="ar" style="width:18%">$ / unit</th>
+          <th style="width:10%">Qty</th>
+          <th style="width:8%"></th>
+        </tr></thead>
+        <tbody id="pbody"></tbody>
+      </table>
+      <button class="add-btn" onclick="addPkg()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add packaging component
+      </button>
+    </div>
+  </div>
+
+  <!-- MFG FEE TIERS -->
+  <div class="sec">
+    <div class="sec-hdr"><span class="sec-title">MFG Fee by Order Volume</span><span class="sec-hint">Used to calculate Total Cost above</span></div>
     <div class="card">
       <table class="ptbl">
-        <thead><tr><th>Quantity</th><th>Unit Price</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td style="font-weight:500">Up to 5,000 units</td><td class="pstd" id="p1">—</td><td style="font-size:12px;color:var(--text-muted)">Standard entry · 50% deposit to begin</td></tr>
-          <tr><td style="font-weight:500">Up to 10,000 units</td><td class="pdisc" id="p2">—</td><td><span class="gbadge">Scale discount –3.7%</span></td></tr>
-        </tbody>
+        <thead><tr><th>Quantity Range</th><th>MFG Fee / Unit</th></tr></thead>
+        <tbody id="mfg-tier-body"></tbody>
       </table>
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+  <!-- PRICING TIERS -->
+  <div class="sec">
+    <div class="sec-hdr"><span class="sec-title">Pricing Tiers</span><span class="sec-hint">Synced with MFG Fee tiers above</span></div>
+    <div class="card">
+      <table class="ptbl">
+        <thead><tr><th>Quantity Range</th><th>Unit Price</th><th>Notes</th></tr></thead>
+        <tbody id="pricing-tier-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TIMELINE + PAYMENT -->
+  <div class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
     <div>
       <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Production Timeline</span></div>
       <div class="card">
-        <div class="tl-item" style="border-right:none"><div class="tl-n">1</div><div><div class="tl-week">Week 1</div><div class="tl-desc">Deposit &amp; label approval</div></div></div>
-        <div class="tl-item" style="border-right:none"><div class="tl-n">2</div><div><div class="tl-week">Week 2–3</div><div class="tl-desc">Raw material sourcing &amp; lab testing</div></div></div>
-        <div class="tl-item" style="border-right:none"><div class="tl-n">3</div><div><div class="tl-week">Week 4–5</div><div class="tl-desc">Blending, encapsulation &amp; filling</div></div></div>
-        <div class="tl-item" style="border-right:none;border-bottom:none"><div class="tl-n">4</div><div><div class="tl-week">Week 6</div><div class="tl-desc">Final QC &amp; shipping dispatch</div></div></div>
+        <div class="tl-item"><div class="tl-n">1</div><div><div class="tl-week">Week 1</div><div class="tl-desc">Deposit &amp; label approval</div></div></div>
+        <div class="tl-item"><div class="tl-n">2</div><div><div class="tl-week">Week 2–3</div><div class="tl-desc">Raw material sourcing &amp; lab testing</div></div></div>
+        <div class="tl-item"><div class="tl-n">3</div><div><div class="tl-week">Week 4–5</div><div class="tl-desc">Blending, encapsulation &amp; filling</div></div></div>
+        <div class="tl-item"><div class="tl-n">4</div><div><div class="tl-week">Week 6</div><div class="tl-desc">Final QC &amp; shipping dispatch</div></div></div>
       </div>
     </div>
     <div>
       <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Payment Terms</span></div>
-      <div class="card" style="height:calc(100% - 26px)">
-        <div class="pay-item" style="border-right:none;border-bottom:1px solid var(--border)"><div class="pay-lbl">Initial Deposit</div><div class="pay-val">50%</div><div class="pay-sub">To begin production</div></div>
-        <div class="pay-item" style="border-right:none;border-bottom:1px solid var(--border)"><div class="pay-lbl">Final Balance</div><div class="pay-val">50%</div><div class="pay-sub">Pre-shipment</div></div>
-        <div class="pay-item" style="border-right:none"><div class="pay-lbl">Production Time</div><div class="pay-val">4–6 Weeks</div><div class="pay-sub">After deposit &amp; label approval</div></div>
+      <div class="card">
+        <div class="pay-item"><div class="pay-lbl">Initial Deposit</div><div class="pay-val">50%</div><div class="pay-sub">To begin production</div></div>
+        <div class="pay-item"><div class="pay-lbl">Final Balance</div><div class="pay-val">50%</div><div class="pay-sub">Pre-shipment</div></div>
+        <div class="pay-item"><div class="pay-lbl">Production Time</div><div class="pay-val">4–6 Weeks</div><div class="pay-sub">After deposit &amp; label approval</div></div>
       </div>
     </div>
   </div>
 
+  <!-- INCLUDED -->
   <div class="sec">
     <div class="sec-hdr"><span class="sec-title">What's Included</span></div>
     <div class="card">
@@ -460,100 +432,158 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 </div>
 
 <script>
-// ── Pure JS XLSX writer ──────────────────────────────────────────────────
-const XW={_t:null,_crc(b){if(!this._t){this._t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);this._t[i]=c;}}let r=0xFFFFFFFF;for(let i=0;i<b.length;i++)r=(this._t[(r^b[i])&0xFF]^(r>>>8));return(r^0xFFFFFFFF)>>>0;},_e(s){return new TextEncoder().encode(s);},_u32(n){const b=new Uint8Array(4);new DataView(b.buffer).setUint32(0,n,true);return b;},_u16(n){const b=new Uint8Array(2);new DataView(b.buffer).setUint16(0,n,true);return b;},_cat(...a){const out=new Uint8Array(a.reduce((s,x)=>s+x.length,0));let o=0;for(const x of a){out.set(x,o);o+=x.length;}return out;},_entry(name,data){const nb=this._e(name),crc=this._crc(data);const local=this._cat(new Uint8Array([0x50,0x4B,0x03,0x04,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(crc),this._u32(data.length),this._u32(data.length),this._u16(nb.length),new Uint8Array(2),nb,data);return{local,crc,size:data.length,nb,name};},_zip(files){const ls=[],cds=[];let off=0;for(const f of files){ls.push(f.local);cds.push(this._cat(new Uint8Array([0x50,0x4B,0x01,0x02,0x14,0x00,0x14,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]),this._u32(f.crc),this._u32(f.size),this._u32(f.size),this._u16(f.nb.length),new Uint8Array(12),this._u32(off),f.nb));off+=f.local.length;}const cd=this._cat(...cds);const eocd=this._cat(new Uint8Array([0x50,0x4B,0x05,0x06,0x00,0x00,0x00,0x00]),this._u16(files.length),this._u16(files.length),this._u32(cd.length),this._u32(off),new Uint8Array(2));return this._cat(...ls,cd,eocd);},
-write(rows){const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const col=n=>{let s='';n++;while(n>0){const r=n%26||26;s=String.fromCharCode(64+r)+s;n=Math.floor((n-r)/26);}return s;};const ss=[],si={};const idx=s=>{s=String(s||'');if(!(s in si)){si[s]=ss.length;ss.push(s);}return si[s];};rows.forEach(r=>(r||[]).forEach(c=>{if(typeof c==='string'&&c)idx(c);}));let sx=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>`;rows.forEach((r,ri)=>{if(!r||!r.length){sx+=`<row r="${ri+1}"/>`;return;}sx+=`<row r="${ri+1}">`;r.forEach((c,ci)=>{if(c===null||c===undefined||c==='')return;const a=col(ci)+(ri+1);sx+=typeof c==='number'?`<c r="${a}"><v>${c}</v></c>`:`<c r="${a}" t="s"><v>${idx(String(c))}</v></c>`;});sx+=`</row>`;});sx+=`</sheetData></worksheet>`;const ssxml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${ss.length}" uniqueCount="${ss.length}">${ss.map(s=>`<si><t xml:space="preserve">${esc(s)}</t></si>`).join('')}</sst>`;const wb=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Proposal" sheetId="1" r:id="rId1"/></sheets></workbook>`;const wbr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;const ar=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;const e=s=>this._e(s);return this._zip([this._entry('[Content_Types].xml',e(ct)),this._entry('_rels/.rels',e(ar)),this._entry('xl/workbook.xml',e(wb)),this._entry('xl/_rels/workbook.xml.rels',e(wbr)),this._entry('xl/worksheets/sheet1.xml',e(sx)),this._entry('xl/sharedStrings.xml',e(ssxml))]);},
-save(rows,filename){const bytes=this.write(rows);const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename||'export.xlsx';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(a.href),1000);}};
-
-// ── App ──────────────────────────────────────────────────────────────────
-const DEFAULT=[
-  ["CO2 Saw Palmetto (45% Fatty Acids)",320,65],["Beta-Sitosterol",200,42],
-];
-let uid=0;
-function addRow(name='',mg='',pkg=''){
-  uid++;const id='r'+uid;
-  const tr=document.createElement('tr');tr.id=id;
-  tr.innerHTML=`<td><textarea class="ing-ta" rows="1" placeholder="Ingredient name" oninput="recalc();autoH(this)">${name}</textarea></td><td><input type="number" class="ar" min="0" step="1" placeholder="0" value="${mg}" oninput="recalc()"></td><td><input type="number" class="ar" min="0" step="0.01" placeholder="0.00" value="${pkg}" oninput="recalc()"></td><td class="num" id="sv-${id}">—</td><td class="num" id="su-${id}">—</td><td class="dc"><button class="delbtn" onclick="document.getElementById('${id}').remove();recalc()" title="Remove">×</button></td>`;
-  document.getElementById('tbody').appendChild(tr);recalc();
-}
-function recalc(){
-  const svgs=parseInt(document.getElementById('svgs').value)||30;
-  const mfg=parseFloat(document.getElementById('mfg').value)||0;
-  let tot=0;
-  document.querySelectorAll('#tbody tr').forEach(tr=>{
-    const ins=tr.querySelectorAll('input');
-    const mg=parseFloat(ins[0]?.value)||0,pkg=parseFloat(ins[1]?.value)||0;
-    const s=(mg/1000000)*pkg;tot+=s;
-    const id=tr.id;
-    const sv=document.getElementById('sv-'+id),su=document.getElementById('su-'+id);
-    if(sv)sv.textContent=s>0?'$'+s.toFixed(4):'—';
-    if(su)su.textContent=s>0?'$'+(s*svgs).toFixed(3):'—';
-  });
-  const ui=tot*svgs,t=ui+mfg;
-  document.getElementById('r-serv').textContent='$'+tot.toFixed(4);
-  document.getElementById('r-unit').textContent='$'+ui.toFixed(3);
-  document.getElementById('r-mfg').textContent='$'+mfg.toFixed(2);
-  document.getElementById('r-total').textContent='$'+t.toFixed(2);
-  document.getElementById('p1').textContent='$'+t.toFixed(2);
-  document.getElementById('p2').textContent='$'+(t*0.963).toFixed(2);
-}
-function exportCSV(){
-  const svgs=parseInt(document.getElementById('svgs').value)||30;
-  const mfg=parseFloat(document.getElementById('mfg').value)||0;
-  const name=document.getElementById('prod-name').value;
-  let csv='';
-  const row=(...cols)=>{csv+=cols.map(c=>{const s=String(c==null?'':c);return s.includes(',')||s.includes('"')||s.includes('\n')?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')+'\n';};
-  row('COMMERCIAL PROPOSAL — '+name.toUpperCase());
-  row('ASAP Nutrition Inc. · 3030 SW 42nd St, Fort Lauderdale, FL, USA · GMP Compliant Manufacturing');
-  row('');
-  row('SUPPLEMENT FACTS — PER SERVING');
-  row('Active Ingredient','mg / serv','$ / kg','$ / serv','$ / unit');
-  let tot=0;
-  document.querySelectorAll('#tbody tr').forEach(tr=>{
-    const ta=tr.querySelector('.ing-ta');
-    const ins=tr.querySelectorAll('input');
-    const n=(ta?.value||'').trim(),mg=parseFloat(ins[0]?.value)||0,pkg=parseFloat(ins[1]?.value)||0;
-    const s=(mg/1000000)*pkg;tot+=s;
-    row(n,mg,pkg,s.toFixed(4),(s*svgs).toFixed(4));
-  });
-  const ui=tot*svgs,t=ui+mfg;
-  row('');row('Other Ingredients: Rice Flour, Nu-FLOW®, HPMC Vegetable Capsule');row('');
-  row('COST ANALYSIS');
-  row('Ingredient Cost / Serving','','','','$'+tot.toFixed(4));
-  row('Ingredient Cost / Unit ('+svgs+' servings)','','','','$'+ui.toFixed(3));
-  row('MFG & PKG Fee / Unit','','','','$'+mfg.toFixed(2));
-  row('TOTAL COST / READY UNIT','','','','$'+t.toFixed(2));
-  row('');row('PRICING TIERS');
-  row('Quantity','Unit Price','Notes');
-  row('Up to 5,000 units','$'+t.toFixed(2),'Standard entry · 50% deposit to begin');
-  row('Up to 10,000 units','$'+(t*0.963).toFixed(2),'Scale discount –3.7%');
-  row('');row('PAYMENT TERMS');
-  row('Initial Deposit','Final Balance','Production Time');
-  row('50%','50% pre-shipment','4–6 weeks after deposit & label approval');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='ASAP_'+name.replace(/\s+/g,'_')+'_Proposal.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  const tip=document.getElementById('csv-tip');
-  if(tip){tip.style.display='flex';setTimeout(()=>tip.style.display='none',8000);}
-}
+let uid = 0;
+let puid = 0;
 
 function autoH(el){
-  el.style.height='auto';
-  el.style.height=el.scrollHeight+'px';
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
 }
-// Init auto-heights on load
-window.addEventListener('load',()=>{
-  document.querySelectorAll('.spec-inp,.ing-ta').forEach(el=>autoH(el));
+
+const MFG_TIERS = [
+  { label: '1,000 – 2,999 units',  fee: 12.50 },
+  { label: '3,000 – 4,999 units',  fee: 10.20 },
+  { label: '5,000 – 9,999 units',  fee: 8.88  },
+  { label: '10,000+ units',        fee: 7.40  },
+];
+let activeTier = 2;
+
+function renderTierUI(){
+  const btns = document.getElementById('tier-btns');
+  btns.innerHTML = '';
+  MFG_TIERS.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'cp-tier-btn' + (i === activeTier ? ' active' : '');
+    b.textContent = t.label.split(' ')[0].replace(',', 'K');
+    b.title = t.label;
+    b.onclick = () => { activeTier = i; renderTierUI(); recalc(); };
+    btns.appendChild(b);
+  });
+
+  const mfgBody = document.getElementById('mfg-tier-body');
+  mfgBody.innerHTML = '';
+  MFG_TIERS.forEach((t, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + t.label + '</td><td><span style="display:inline-flex;align-items:center;gap:4px">$<input type="number" class="mfg-fee-inp" data-idx="' + i + '" value="' + t.fee.toFixed(2) + '" min="0" step="0.01" style="width:70px;border:none;outline:none;font-size:13px;font-weight:600;font-family:inherit;background:transparent" oninput="updateMfgFee(' + i + ', this.value)"></span></td>';
+    mfgBody.appendChild(tr);
+  });
+
+  renderPricingTiers();
+}
+
+function updateMfgFee(idx, val){
+  MFG_TIERS[idx].fee = parseFloat(val) || 0;
+  recalc();
+}
+
+function renderPricingTiers(){
+  const body = document.getElementById('pricing-tier-body');
+  body.innerHTML = '';
+  const ing = totalIngredientCostPerUnit();
+  const pkg = totalPackagingCostPerUnit();
+  MFG_TIERS.forEach((t, i) => {
+    const total = ing + pkg + t.fee;
+    const tr = document.createElement('tr');
+    const isLowest = i === MFG_TIERS.length - 1;
+    const noteHtml = i===0 ? 'Standard entry · 50% deposit to begin' : (isLowest ? '<span class="gbadge">Best volume rate</span>' : 'Scale discount');
+    tr.innerHTML = '<td style="font-weight:500">' + t.label + '</td><td class="' + (isLowest ? 'pdisc' : 'pstd') + '">$' + total.toFixed(2) + '</td><td style="font-size:12px;color:var(--text-muted)">' + noteHtml + '</td>';
+    body.appendChild(tr);
+  });
+}
+
+function addRow(name, mg, pkg){
+  name = name || ''; mg = mg === undefined ? '' : mg; pkg = pkg === undefined ? '' : pkg;
+  uid++; const id = 'r' + uid;
+  const tr = document.createElement('tr'); tr.id = id;
+  tr.innerHTML = '<td><textarea class="ing-ta" rows="1" placeholder="Ingredient name" oninput="recalc();autoH(this)">' + name + '</textarea></td><td><input type="number" class="ar" min="0" step="1" placeholder="0" value="' + mg + '" oninput="recalc()"></td><td><input type="number" class="ar" min="0" step="0.01" placeholder="0.00" value="' + pkg + '" oninput="recalc()"></td><td class="num" id="sv-' + id + '">—</td><td class="num" id="su-' + id + '">—</td><td class="dc"><button class="delbtn" onclick="document.getElementById(\'' + id + '\').remove();recalc()" title="Remove">×</button></td>';
+  document.getElementById('tbody').appendChild(tr);
+  recalc();
+}
+
+function totalIngredientCostPerUnit(){
+  const svgs = parseInt(document.getElementById('svgs').value) || 30;
+  let tot = 0;
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    const ins = tr.querySelectorAll('input');
+    const mg = parseFloat(ins[0]?.value) || 0;
+    const pkgPrice = parseFloat(ins[1]?.value) || 0;
+    tot += (mg / 1000000) * pkgPrice;
+  });
+  return tot * svgs;
+}
+
+function addPkg(name, price, qty){
+  name = name || ''; price = price === undefined ? '' : price; qty = qty === undefined ? 1 : qty;
+  puid++; const id = 'p' + puid;
+  const tr = document.createElement('tr'); tr.id = id;
+  tr.innerHTML = '<td><textarea class="ing-ta" rows="1" placeholder="e.g. Jar, Cap, Silica packet" oninput="recalc();autoH(this)">' + name + '</textarea></td><td><input type="number" class="ar" min="0" step="0.001" placeholder="0.00" value="' + price + '" oninput="recalc()"></td><td><input type="number" min="1" step="1" value="' + qty + '" oninput="recalc()" style="text-align:center"></td><td class="dc"><button class="delbtn" onclick="document.getElementById(\'' + id + '\').remove();recalc()" title="Remove">×</button></td>';
+  document.getElementById('pbody').appendChild(tr);
+  recalc();
+}
+
+function totalPackagingCostPerUnit(){
+  let tot = 0;
+  document.querySelectorAll('#pbody tr').forEach(tr => {
+    const ins = tr.querySelectorAll('input');
+    const price = parseFloat(ins[0]?.value) || 0;
+    const qty = parseFloat(ins[1]?.value) || 1;
+    tot += price * qty;
+  });
+  return tot;
+}
+
+function recalc(){
+  const svgs = parseInt(document.getElementById('svgs').value) || 30;
+
+  let servTot = 0;
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    const ins = tr.querySelectorAll('input');
+    const mg = parseFloat(ins[0]?.value) || 0;
+    const pkgPrice = parseFloat(ins[1]?.value) || 0;
+    const s = (mg / 1000000) * pkgPrice;
+    servTot += s;
+    const id = tr.id;
+    const sv = document.getElementById('sv-' + id);
+    const su = document.getElementById('su-' + id);
+    if (sv) sv.textContent = s > 0 ? '$' + s.toFixed(4) : '—';
+    if (su) su.textContent = s > 0 ? '$' + (s * svgs).toFixed(3) : '—';
+  });
+
+  const ingUnit = servTot * svgs;
+  const pkgUnit = totalPackagingCostPerUnit();
+  const mfgFee = MFG_TIERS[activeTier].fee;
+  const total = ingUnit + pkgUnit + mfgFee;
+
+  document.getElementById('r-serv').textContent = '$' + servTot.toFixed(4);
+  document.getElementById('r-unit').textContent = '$' + ingUnit.toFixed(3);
+  document.getElementById('r-pkg').textContent = '$' + pkgUnit.toFixed(3);
+  document.getElementById('r-mfg').textContent = '$' + mfgFee.toFixed(2);
+  document.getElementById('r-total').textContent = '$' + total.toFixed(2);
+
+  renderPricingTiers();
+}
+
+window.addEventListener('load', () => {
+  document.querySelectorAll('.spec-inp,.ing-ta').forEach(el => autoH(el));
 });
 
-DEFAULT.forEach(([n,m,p])=>addRow(n,m,p));
+renderTierUI();
+addRow('CO2 Saw Palmetto (45% Fatty Acids)', 320, 65);
+addRow('Beta-Sitosterol', 200, 42);
+addRow('Tocotrinols (Potent E)', 100, 115);
+addRow('L-Theanine', 200, 28);
+addRow('DIM (Diindolylmethane)', 100, 85);
+addRow('Vitamin C (Ascorbic Acid)', 150, 8.5);
+addRow('Astaxanthin', 6, 450);
+addRow('Bamboo Silica (70% Silica)', 10, 48);
+addRow('Zinc Bisglycinate', 50, 32);
+addRow('Vitamin D3 (2,000 IU)', 5, 210);
+
+addPkg('Jar (60 capsule, white HDPE)', 0.42, 1);
+addPkg('Cap (child-resistant)', 0.11, 1);
+addPkg('Silica gel packet', 0.03, 1);
+addPkg('Label (printed)', 0.18, 1);
 </script>
-<div id="csv-tip" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A1A2E;color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;align-items:center;gap:12px;z-index:200;max-width:440px;width:92%">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E6A0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="20,6 9,17 4,12"/></svg>
-  <span>CSV downloaded! Open <strong>sheets.google.com</strong> → File → Import → upload the file</span>
-  <button onclick="document.getElementById('csv-tip').style.display='none'" style="background:none;border:none;color:#777;cursor:pointer;font-size:20px;line-height:1;margin-left:auto">×</button>
-</div>
+
 </body>
 </html>
