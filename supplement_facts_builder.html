@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Конструктор этикетки Supplement Facts</title>
+<style>
+  :root{
+    --ink:#0c0c0c;
+    --paper:#ffffff;
+    --bg:#f3f4f1;
+    --panel:#ffffff;
+    --line:#d8dad4;
+    --accent:#1f5f54;
+    --accent-soft:#e7efe9;
+    --muted:#6b6f68;
+    --danger:#a23b3b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: ui-sans-serif, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding:28px 20px 60px;
+  }
+  .app{max-width:1180px;margin:0 auto;}
+  .app-header{margin-bottom:22px;}
+  .app-header h1{
+    font-size:1.5rem;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  .app-header p{
+    margin:0;
+    color:var(--muted);
+    font-size:0.92rem;
+    max-width:640px;
+    line-height:1.45;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns: minmax(360px, 460px) 1fr;
+    gap:24px;
+    align-items:start;
+  }
+  @media (max-width: 920px){
+    .layout{grid-template-columns: 1fr;}
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px;
+  }
+  .panel h2{
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--muted);
+    margin:0 0 12px;
+    font-weight:700;
+  }
+  .field-row{display:flex;gap:10px;margin-bottom:10px;}
+  .field{flex:1;display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+  .field label{font-size:0.78rem;color:var(--muted);}
+  .field input[type="text"],
+  .field input[type="number"],
+  .field select,
+  .field textarea{
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:7px 9px;
+    font-size:0.88rem;
+    font-family:inherit;
+    background:#fff;
+    color:var(--ink);
+    width:100%;
+  }
+  .field textarea{resize:vertical;min-height:54px;}
+  .section-gap{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+  .row-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:10px;
+    position:relative;
+    background:#fbfbfa;
+  }
+  .row-card-top{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;}
+  .row-card-top .field{margin-bottom:0;}
+  .row-grid{display:grid;grid-template-columns: 1fr 90px 90px 90px;gap:8px;}
+  .row-grid .field{margin-bottom:0;}
+  .row-remove{
+    background:none;border:none;color:var(--danger);cursor:pointer;
+    font-size:0.78rem;padding:4px 6px;border-radius:6px;
+  }
+  .row-remove:hover{background:#f4e6e6;}
+  .check-line{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);margin-top:6px;flex-wrap:wrap;}
+  .check-line label{display:flex;align-items:center;gap:5px;}
+  .dv-hint{font-size:0.74rem;color:var(--accent);min-height:14px;}
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    font-family:inherit;font-size:0.85rem;font-weight:600;
+    padding:9px 14px;border-radius:7px;
+  }
+  .btn-add{
+    width:100%;background:var(--accent-soft);color:var(--accent);
+    border:1px dashed var(--accent);
+  }
+  .btn-add:hover{background:#dcebe3;}
+  .btn-primary{
+    background:var(--ink);color:#fff;width:100%;
+    margin-top:10px;
+  }
+  .btn-primary:hover{background:#262626;}
+  .btn-secondary{
+    background:#fff;color:var(--ink);border:1px solid var(--line);
+    width:100%;margin-top:8px;
+  }
+  .btn-secondary:hover{background:#f1f1ef;}
+  .preview-wrap{position:sticky;top:20px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .size-controls{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    font-size:0.8rem;color:var(--muted);width:100%;
+  }
+  .size-controls .field{flex:0 0 auto;width:120px;margin-bottom:0;}
+  #labelHolder{
+    background:#e7e7e3;
+    padding:24px;
+    border-radius:10px;
+    display:flex;
+    justify-content:center;
+    width:100%;
+    overflow:auto;
+  }
+  /* ---------- THE LABEL ITSELF ---------- */
+  .label{
+    background:var(--paper);
+    color:#000;
+    border:2.4px solid #000;
+    padding:14px 16px 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Force black bars / backgrounds to print even if the browser's
+     "background graphics" print option is switched off */
+  .label, .label *{
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  .label-title{
+    font-weight:900;
+    font-size:2.2em;
+    letter-spacing:-0.015em;
+    line-height:1;
+    margin:0 0 10px;
+  }
+  .label-serving div{
+    font-size:0.85em;
+    line-height:1.5;
+  }
+  .bar-thick{
+    background:#000;
+    height:9px;
+    margin:7px 0;
+  }
+  .label-headers{
+    display:flex;
+    align-items:flex-end;
+    padding-bottom:3px;
+  }
+  .label-headers .col-name{flex:1;}
+  .label-headers .col-amt,
+  .label-headers .col-dv{
+    text-align:right;
+    font-weight:700;
+    font-size:0.78em;
+    line-height:1.25;
+  }
+  .col-amt{width:34%;}
+  .col-dv{width:22%;}
+  .nrow{
+    display:flex;
+    align-items:flex-start;
+    padding:6px 0;
+    border-top:1px solid #bbb;
+  }
+  .nrow:first-child{border-top:none;}
+  .nrow .col-name{flex:1;padding-right:8px;}
+  .nrow .nname{font-size:0.92em;line-height:1.3;}
+  .nrow .nmod{font-size:0.84em;font-style:italic;line-height:1.3;}
+  .nrow.indent .nname{padding-left:18px;}
+  .nrow .col-amt{width:34%;text-align:right;font-size:0.92em;align-self:center;}
+  .nrow .col-dv{width:22%;text-align:right;font-size:0.92em;align-self:center;}
+  .label-footnote{
+    font-size:0.78em;
+    line-height:1.5;
+    margin-top:8px;
+    white-space:pre-line;
+  }
+  .label-other{
+    font-size:0.85em;
+    line-height:1.5;
+    margin-top:14px;
+    max-width: var(--lw, 360px);
+  }
+  .label-other b{font-weight:700;}
+  .fda-note{
+    font-size:0.76rem;
+    color:var(--muted);
+    max-width:380px;
+    text-align:center;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="app-header">
+    <h1>Конструктор этикетки Supplement Facts</h1>
+    <p>Заполняйте состав слева — этикетка справа обновляется автоматически и сохраняет формат, шрифты и линии, рекомендованные FDA (21 CFR 101.36). По готовности скачайте PDF в реальном размере.</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- EDITOR -->
+    <div class="panel">
+      <h2>Параметры порции</h2>
+      <div class="field-row">
+        <div class="field">
+          <label>Serving Size (размер порции)</label>
+          <input type="text" id="servingSize" value="1 Capsules">
+        </div>
+        <div class="field">
+          <label>Servings Per Container</label>
+          <input type="text" id="servingsPerContainer" placeholder="оставьте пустым для «___»">
+        </div>
+      </div>
+
+      <div class="section-gap">
+        <h2>Состав (ингредиенты)</h2>
+        <div id="rowsContainer"></div>
+        <button class="btn btn-add" id="addRowBtn">+ Добавить ингредиент</button>
+      </div>
+
+      <div class="section-gap">
+        <h2>Сноска (footnote)</h2>
+        <div class="field">
+          <textarea id="footnote">**Daily Value not established</textarea>
+        </div>
+      </div>
+
+      <div class="section-gap">
+        <h2>Other ingredients</h2>
+        <div class="field">
+          <textarea id="otherIngredients">Capsule (vegetable cellulose or gelatine), Magnesium stearate</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-wrap">
+
+      <div class="panel" style="width:100%;">
+        <h2>Размер этикетки и страницы</h2>
+        <div class="size-controls">
+          <div class="field">
+            <label>Ширина этикетки, дюймы</label>
+            <input type="number" id="widthIn" value="2.6" step="0.1" min="1.5" max="6">
+          </div>
+          <div class="field">
+            <label>Формат страницы PDF</label>
+            <select id="pageFormat">
+              <option value="a4">A4</option>
+              <option value="letter">Letter</option>
+            </select>
+          </div>
+          <div class="dv-hint" style="flex:1;min-width:200px;">
+            FDA: минимальная высота строчной буквы «o» — 1/16 дюйма. Перед печатью проверьте масштаб 1:1.
+          </div>
+        </div>
+      </div>
+
+      <div id="labelHolder">
+        <div class="label" id="label"></div>
+      </div>
+
+      <button class="btn btn-primary" id="printBtn">🖨 Печать / Сохранить как PDF</button>
+
+      <div class="fda-note">
+        Это конструктор макета, а не юридическая консультация. Перед производством проверьте расчёт %DV, формулировки и финальный размер шрифта у специалиста по регуляторике.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+
+  // FDA Daily Values (adults, 21 CFR 101.9, 2020 update) — name(lowercase) -> {value, unit}
+  const REFERENCE_DV = {
+    "biotin": {v:30, u:"mcg"},
+    "calcium": {v:1300, u:"mg"},
+    "chloride": {v:2300, u:"mg"},
+    "choline": {v:550, u:"mg"},
+    "chromium": {v:35, u:"mcg"},
+    "copper": {v:0.9, u:"mg"},
+    "dietary fiber": {v:28, u:"g"},
+    "fiber": {v:28, u:"g"},
+    "folate": {v:400, u:"mcg"},
+    "folic acid": {v:400, u:"mcg"},
+    "iodine": {v:150, u:"mcg"},
+    "iron": {v:18, u:"mg"},
+    "magnesium": {v:420, u:"mg"},
+    "manganese": {v:2.3, u:"mg"},
+    "molybdenum": {v:45, u:"mcg"},
+    "niacin": {v:16, u:"mg"},
+    "pantothenic acid": {v:5, u:"mg"},
+    "phosphorus": {v:1250, u:"mg"},
+    "potassium": {v:4700, u:"mg"},
+    "protein": {v:50, u:"g"},
+    "riboflavin": {v:1.3, u:"mg"},
+    "selenium": {v:55, u:"mcg"},
+    "sodium": {v:2300, u:"mg"},
+    "thiamin": {v:1.2, u:"mg"},
+    "total carbohydrate": {v:275, u:"g"},
+    "vitamin a": {v:900, u:"mcg"},
+    "vitamin b6": {v:1.7, u:"mg"},
+    "vitamin b12": {v:2.4, u:"mcg"},
+    "vitamin c": {v:90, u:"mg"},
+    "vitamin d": {v:20, u:"mcg"},
+    "vitamin e": {v:15, u:"mg"},
+    "vitamin k": {v:120, u:"mcg"},
+    "zinc": {v:11, u:"mg"}
+  };
+
+  const UNIT_TO_MG = {mg:1, g:1000, mcg:0.001, IU:null, ml:null};
+
+  function convert(amount, fromUnit, toUnit){
+    if(fromUnit === toUnit) return amount;
+    if(UNIT_TO_MG[fromUnit] == null || UNIT_TO_MG[toUnit] == null) return null;
+    const mg = amount * UNIT_TO_MG[fromUnit];
+    return mg / UNIT_TO_MG[toUnit];
+  }
+
+  let rowId = 2;
+  let state = {
+    rows: [
+      {id:1, name:"Magnesium", modifier:"as magnesium malate", amount:78, unit:"mg", dvMode:"value", dv:18, autoCalc:true, indent:false},
+      {id:2, name:"Magnesium Malate", modifier:"", amount:500, unit:"mg", dvMode:"na", dv:"", autoCalc:false, indent:false}
+    ]
+  };
+
+  const rowsContainer = document.getElementById('rowsContainer');
+  const labelEl = document.getElementById('label');
+
+  function fmtAmount(amount, unit){
+    if(amount === "" || amount === null || amount === undefined || isNaN(amount)) return "";
+    let a = Number(amount);
+    a = Math.round(a*1000)/1000;
+    return a + " " + unit;
+  }
+
+  function computeDV(row){
+    if(row.dvMode === "blank") return "";
+    if(row.dvMode === "na") return "**";
+    if(row.autoCalc){
+      const key = (row.name||"").trim().toLowerCase();
+      const ref = REFERENCE_DV[key];
+      if(ref && row.amount !== "" && !isNaN(row.amount)){
+        const converted = convert(Number(row.amount), row.unit, ref.u);
+        if(converted != null){
+          return Math.round((converted/ref.v)*100) + "%";
+        }
+      }
+      return "—";
+    }
+    if(row.dv === "" || row.dv === null || isNaN(row.dv)) return "";
+    return Math.round(Number(row.dv)) + "%";
+  }
+
+  function dvHint(row){
+    const key = (row.name||"").trim().toLowerCase();
+    const ref = REFERENCE_DV[key];
+    if(row.autoCalc && ref){
+      return `Норма: ${ref.v} ${ref.u} → расчёт идёт автоматически`;
+    }
+    if(row.autoCalc && !ref){
+      return `Нет эталонной нормы для «${row.name}» — введите % вручную или снимите авто-расчёт`;
+    }
+    return "";
+  }
+
+  function renderRows(){
+    rowsContainer.innerHTML = "";
+    state.rows.forEach((row, idx) => {
+      const card = document.createElement('div');
+      card.className = 'row-card';
+
+      card.innerHTML = `
+        <div class="row-card-top">
+          <div class="field" style="flex:2;">
+            <label>Название</label>
+            <input type="text" list="nutrientList" data-field="name" value="${escapeHtml(row.name)}">
+          </div>
+          <button class="row-remove" data-action="remove">✕ удалить</button>
+        </div>
+        <div class="field" style="margin-bottom:8px;">
+          <label>Пояснение курсивом (необязательно), напр. "as magnesium malate"</label>
+          <input type="text" data-field="modifier" value="${escapeHtml(row.modifier)}">
+        </div>
+        <div class="row-grid">
+          <div class="field">
+            <label>Количество</label>
+            <input type="number" step="any" data-field="amount" value="${row.amount}">
+          </div>
+          <div class="field">
+            <label>Ед.</label>
+            <select data-field="unit">
+              ${["mg","mcg","g","IU","ml"].map(u=>`<option value="${u}" ${row.unit===u?'selected':''}>${u}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>%DV режим</label>
+            <select data-field="dvMode">
+              <option value="value" ${row.dvMode==='value'?'selected':''}>число</option>
+              <option value="na" ${row.dvMode==='na'?'selected':''}>** не уст.</option>
+              <option value="blank" ${row.dvMode==='blank'?'selected':''}>пусто</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>%DV вручную</label>
+            <input type="number" step="any" data-field="dv" value="${row.dv}" ${row.dvMode!=='value' || row.autoCalc ? 'disabled' : ''}>
+          </div>
+        </div>
+        <div class="check-line">
+          <label><input type="checkbox" data-field="autoCalc" ${row.autoCalc?'checked':''} ${row.dvMode!=='value'?'disabled':''}> авто-расчёт %DV по норме FDA</label>
+          <label><input type="checkbox" data-field="indent" ${row.indent?'checked':''}> отступ (под-ингредиент / часть смеси)</label>
+        </div>
+        <div class="dv-hint">${row.dvMode==='value' ? dvHint(row) : ""}</div>
+      `;
+
+      card.querySelectorAll('[data-field]').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const f = e.target.dataset.field;
+          let val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+          if(e.target.type === 'number' && val !== "") val = parseFloat(val);
+          row[f] = val;
+          renderRows();
+          renderLabel();
+        });
+        input.addEventListener('change', (e) => {
+          const f = e.target.dataset.field;
+          let val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+          if(e.target.type === 'number' && val !== "") val = parseFloat(val);
+          row[f] = val;
+          renderRows();
+          renderLabel();
+        });
+      });
+
+      card.querySelector('[data-action="remove"]').addEventListener('click', () => {
+        state.rows = state.rows.filter(r => r.id !== row.id);
+        renderRows();
+        renderLabel();
+      });
+
+      rowsContainer.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str){
+    return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function renderLabel(){
+    const servingSize = document.getElementById('servingSize').value;
+    const spc = document.getElementById('servingsPerContainer').value.trim();
+    const footnote = document.getElementById('footnote').value;
+    const otherIng = document.getElementById('otherIngredients').value;
+    const widthIn = parseFloat(document.getElementById('widthIn').value) || 2.6;
+    const widthPx = Math.round(widthIn * 96);
+
+    labelEl.style.width = widthPx + "px";
+    labelEl.style.setProperty('--lw', (widthPx - 32) + "px");
+
+    let rowsHtml = state.rows.map(row => {
+      const dvText = computeDV(row);
+      return `
+        <div class="nrow ${row.indent ? 'indent':''}">
+          <div class="col-name">
+            <div class="nname">${escapeHtml(row.name) || "&nbsp;"}</div>
+            ${row.modifier ? `<div class="nmod">(${escapeHtml(row.modifier)})</div>` : ""}
+          </div>
+          <div class="col-amt">${fmtAmount(row.amount, row.unit)}</div>
+          <div class="col-dv">${dvText}</div>
+        </div>`;
+    }).join("");
+
+    labelEl.innerHTML = `
+      <div class="label-title">Supplement Facts</div>
+      <div class="label-serving">
+        <div>Serving Size: ${escapeHtml(servingSize)}</div>
+        <div>Servings Per Container: ${spc ? escapeHtml(spc) : "___"}</div>
+      </div>
+      <div class="bar-thick"></div>
+      <div class="label-headers">
+        <div class="col-name"></div>
+        <div class="col-amt">Amount<br>Per Serving</div>
+        <div class="col-dv">% Daily<br>Value</div>
+      </div>
+      <div class="bar-thick"></div>
+      ${rowsHtml}
+      <div class="bar-thick"></div>
+      <div class="label-footnote">${escapeHtml(footnote)}</div>
+      <div class="label-other"><b>Other ingredients:</b> ${escapeHtml(otherIng)}</div>
+    `;
+  }
+
+  // datalist for nutrient autocomplete
+  const datalist = document.createElement('datalist');
+  datalist.id = 'nutrientList';
+  Object.keys(REFERENCE_DV).forEach(k => {
+    const opt = document.createElement('option');
+    opt.value = k.replace(/\b\w/g, c => c.toUpperCase());
+    datalist.appendChild(opt);
+  });
+  document.body.appendChild(datalist);
+
+  document.getElementById('addRowBtn').addEventListener('click', () => {
+    rowId++;
+    state.rows.push({id:rowId, name:"", modifier:"", amount:"", unit:"mg", dvMode:"value", dv:"", autoCalc:false, indent:false});
+    renderRows();
+    renderLabel();
+  });
+
+  ['servingSize','servingsPerContainer','footnote','otherIngredients','widthIn'].forEach(id => {
+    document.getElementById(id).addEventListener('input', renderLabel);
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => {
+    const pageFormat = document.getElementById('pageFormat').value; // 'a4' | 'letter'
+    const printWin = window.open('', '_blank');
+    printWin.document.write(`
+      <html><head><title>Supplement Facts</title>
+      <style>
+        @page{ size: ${pageFormat}; margin: 12mm; }
+        html,body{margin:0;padding:0;}
+        body{display:flex;justify-content:center;align-items:flex-start;}
+        .label{ page-break-inside: avoid; break-inside: avoid; }
+        ${document.querySelector('style').innerHTML}
+      </style>
+      </head><body>${labelEl.outerHTML}</body></html>
+    `);
+    printWin.document.close();
+    printWin.onload = () => { printWin.focus(); printWin.print(); };
+  });
+
+  renderRows();
+  renderLabel();
+})();
+</script>
+</body>
+</html>
