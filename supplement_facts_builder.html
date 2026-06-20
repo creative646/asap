@@ -405,7 +405,7 @@
         <div class="row-card-top">
           <div class="field" style="flex:2;">
             <label>Название</label>
-            <input type="text" list="nutrientList" data-field="name" value="${escapeHtml(row.name)}">
+            <input type="text" data-field="name" value="${escapeHtml(row.name)}">
           </div>
           <button class="row-remove" data-action="remove">✕ удалить</button>
         </div>
@@ -520,16 +520,6 @@
       <div class="label-other"><b>Other ingredients:</b> ${escapeHtml(otherIng)}</div>
     `;
   }
-
-  // datalist for nutrient autocomplete
-  const datalist = document.createElement('datalist');
-  datalist.id = 'nutrientList';
-  Object.keys(REFERENCE_DV).forEach(k => {
-    const opt = document.createElement('option');
-    opt.value = k.replace(/\b\w/g, c => c.toUpperCase());
-    datalist.appendChild(opt);
-  });
-  document.body.appendChild(datalist);
 
   document.getElementById('addRowBtn').addEventListener('click', () => {
     rowId++;
