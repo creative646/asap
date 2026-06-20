@@ -216,7 +216,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   body{background:#fff;font-size:11px}
   .toolbar,.add-btn,.delbtn,.settings,#csv-tip,.cp-tier-select{display:none!important}
   .page{margin:0;padding:10px 14px;max-width:100%}
-  .hero,.cost-panel{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero,.cost-panel,.pricing-highlight{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   input,textarea{pointer-events:none}
   .tl-week-inp{font-size:9px}
   .tl-desc-ta,.inc-item-ta,.pay-sub-ta{font-size:11px}
@@ -240,9 +240,22 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   .tl-desc{font-size:11px}
   .pay-val{font-size:12px}
   .inc-list li{font-size:11px}
+  .page-break-before{break-before:page;page-break-before:always}
+  .pricing-highlight .pstd,.pricing-highlight .pdisc{font-size:15px}
 }
+
+/* PRICING TIERS — highlighted card */
+.pricing-highlight{
+  border:2px solid var(--brand);
+  background:linear-gradient(180deg, var(--brand-light) 0%, #fff 70px);
+  box-shadow:0 2px 12px rgba(107,63,160,.12);
+}
+.pricing-highlight .ptbl th{background:transparent;color:var(--brand);font-weight:800}
+.pricing-highlight .pstd{font-size:19px}
+.pricing-highlight .pdisc{font-size:19px}
 </style>
 </head>
+
 <body>
 
 <div class="toolbar">
@@ -304,8 +317,8 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
               <th style="width:38%">Active Ingredient</th>
               <th class="ar" style="width:18%">mg / serv</th>
               <th class="ar" style="width:18%">$ / kg</th>
-              <th class="ar" style="width:18%">$ / serv</th>
-              <th class="ar" style="width:18%">$ / unit</th>
+              <th class="ar" style="width:14%">$ / serv</th>
+              <th class="ar" style="width:14%">$ / unit</th>
               <th style="width:8%"></th>
             </tr></thead>
             <tbody id="tbody"></tbody>
@@ -354,7 +367,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   </div>
 
   <!-- PACKAGING COMPONENTS -->
-  <div class="sec">
+  <div class="sec page-break-before">
     <div class="sec-hdr"><span class="sec-title">Packaging Components</span><span class="sec-hint">Jar, cap, silica, label, etc.</span></div>
     <div class="card">
       <table class="itbl" id="ptbl">
@@ -378,16 +391,20 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
     <div class="sec-hdr"><span class="sec-title">MFG Fee by Order Volume</span><span class="sec-hint">Used to calculate Total Cost above</span></div>
     <div class="card">
       <table class="ptbl">
-        <thead><tr><th>Quantity Range</th><th>MFG Fee / Unit</th></tr></thead>
+        <thead><tr><th>Quantity Range</th><th>MFG Fee / Unit</th><th style="width:36px"></th></tr></thead>
         <tbody id="mfg-tier-body"></tbody>
       </table>
+      <button class="add-btn" onclick="addTier()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add quantity tier
+      </button>
     </div>
   </div>
 
   <!-- PRICING TIERS -->
   <div class="sec">
     <div class="sec-hdr"><span class="sec-title">Pricing Tiers</span><span class="sec-hint">Synced with MFG Fee tiers above</span></div>
-    <div class="card">
+    <div class="card pricing-highlight">
       <table class="ptbl">
         <thead><tr><th>Quantity Range</th><th>Unit Price</th><th>Notes</th></tr></thead>
         <tbody id="pricing-tier-body"></tbody>
@@ -484,10 +501,38 @@ function renderTierUI(){
   mfgBody.innerHTML = '';
   MFG_TIERS.forEach((t, i) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + t.label + '</td><td><span style="display:inline-flex;align-items:center;gap:4px">$<input type="number" class="mfg-fee-inp" data-idx="' + i + '" value="' + t.fee.toFixed(2) + '" min="0" step="0.01" style="width:70px;border:none;outline:none;font-size:13px;font-weight:600;font-family:inherit;background:transparent" oninput="updateMfgFee(' + i + ', this.value)"></span></td>';
+    tr.innerHTML = '<td><input type="text" class="tier-label-inp" data-idx="' + i + '" value="' + t.label + '" oninput="updateTierLabel(' + i + ', this.value)" style="width:100%;border:none;outline:none;font-size:13px;font-family:inherit;background:transparent;color:var(--text)"></td><td><span style="display:inline-flex;align-items:center;gap:4px">$<input type="number" class="mfg-fee-inp" data-idx="' + i + '" value="' + t.fee.toFixed(2) + '" min="0" step="0.01" style="width:70px;border:none;outline:none;font-size:13px;font-weight:600;font-family:inherit;background:transparent" oninput="updateMfgFee(' + i + ', this.value)"></span></td><td style="text-align:center"><button class="delbtn" onclick="removeTier(' + i + ')" title="Remove tier">×</button></td>';
     mfgBody.appendChild(tr);
   });
 
+  renderPricingTiers();
+}
+
+function addTier(){
+  MFG_TIERS.push({ label: 'New Tier', fee: 0 });
+  if (activeTier >= MFG_TIERS.length) activeTier = MFG_TIERS.length - 1;
+  renderTierUI();
+  recalc();
+}
+
+function removeTier(idx){
+  if (MFG_TIERS.length <= 1) return; // keep at least one tier
+  MFG_TIERS.splice(idx, 1);
+  if (activeTier >= MFG_TIERS.length) activeTier = MFG_TIERS.length - 1;
+  if (activeTier === idx && idx > 0) activeTier = idx - 1;
+  renderTierUI();
+  recalc();
+}
+
+function updateTierLabel(idx, val){
+  MFG_TIERS[idx].label = val;
+  // Update tier button title + short label without full rerender (avoids losing focus)
+  const btns = document.getElementById('tier-btns');
+  const btn = btns.children[idx];
+  if (btn) {
+    btn.title = val;
+    btn.textContent = val.split(' ')[0].replace(',', 'K');
+  }
   renderPricingTiers();
 }
 
@@ -637,10 +682,9 @@ window.addEventListener('load', () => {
 });
 
 renderTierUI();
-addRow('Ingridiet', 320, 65);
-addRow('Ingridiet', 200, 42);
-addRow('Ingridiet', 100, 115);
-
+addRow('Ingredient 01', '', '');
+addRow('Ingredient 02', '', '');
+addRow('Ingredient 03', '', '');
 
 addPkg('Jar (60 capsule, white HDPE)', 0.42, 1);
 addPkg('Cap (child-resistant)', 0.11, 1);
