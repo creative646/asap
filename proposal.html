@@ -92,9 +92,9 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
 .ing-ta::placeholder{color:#ccc}
 
 /* SECTION */
-.sec{margin-bottom:20px}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.sec-title{font-size:10px;font-weight:700;color:var(--brand);letter-spacing:.1em;text-transform:uppercase}
+.sec{margin-bottom:24px}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--brand)}
+.sec-title{font-size:13px;font-weight:800;color:var(--brand);letter-spacing:.06em;text-transform:uppercase}
 .sec-hint{font-size:11px;color:var(--text-hint)}
 
 /* CARD */
@@ -242,6 +242,19 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   .inc-list li{font-size:11px}
   .page-break-before{break-before:page;page-break-before:always}
   .pricing-highlight .pstd,.pricing-highlight .pdisc{font-size:15px}
+  /* Prevent any block from breaking mid-content */
+  .sec{break-inside:avoid;page-break-inside:avoid}
+  .card{break-inside:avoid;page-break-inside:avoid}
+  .tl-item{break-inside:avoid;page-break-inside:avoid}
+  .pay-item{break-inside:avoid;page-break-inside:avoid}
+  .inc-col{break-inside:avoid;page-break-inside:avoid}
+  .inc-item{break-inside:avoid;page-break-inside:avoid}
+  .two-col{break-inside:avoid;page-break-inside:avoid}
+  .hero{break-inside:avoid;page-break-inside:avoid}
+  .facts-layout{break-inside:avoid;page-break-inside:avoid}
+  .totals-wrap{break-inside:avoid;page-break-inside:avoid}
+  /* Section title always stays with its content */
+  .sec-hdr{break-after:avoid;page-break-after:avoid}
 }
 
 /* PRICING TIERS — highlighted card */
@@ -315,7 +328,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
           <table class="itbl" id="itbl">
             <thead><tr>
               <th style="width:38%">Active Ingredient</th>
-              <th class="ar" style="width:18%">mg / serv</th>
+              <th class="ar" style="width:12%">mg / serv</th>
               <th class="ar" style="width:18%">$ / kg</th>
               <th class="ar" style="width:14%">$ / serv</th>
               <th class="ar" style="width:14%">$ / unit</th>
@@ -415,7 +428,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
   <!-- TIMELINE + PAYMENT -->
   <div class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
     <div>
-      <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Production Timeline</span></div>
+      <div class="sec-hdr" style="margin-bottom:10px"><span class="sec-title">Production Timeline</span></div>
       <div class="card">
         <div id="timeline-body"></div>
         <button class="add-btn" onclick="addTimelineStep()">
@@ -425,7 +438,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--text);
       </div>
     </div>
     <div>
-      <div class="sec-hdr" style="margin-bottom:8px"><span class="sec-title">Payment Terms</span></div>
+      <div class="sec-hdr" style="margin-bottom:10px"><span class="sec-title">Payment Terms</span></div>
       <div class="card">
         <div id="payment-body"></div>
         <button class="add-btn" onclick="addPaymentItem()">
