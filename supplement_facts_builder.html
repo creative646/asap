@@ -1,519 +1,697 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Конструктор этикетки Supplement Facts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supplement Facts Label Builder (21 CFR 101.36)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root{
-    --ink:#0c0c0c;
-    --paper:#ffffff;
-    --bg:#f3f4f1;
-    --panel:#ffffff;
-    --line:#d8dad4;
-    --accent:#1f5f54;
-    --accent-soft:#e7efe9;
-    --muted:#6b6f68;
-    --danger:#a23b3b;
+    --ink:#0c0c0c; --bg:#f3f4f1; --panel:#fff; --line:#d8dad4;
+    --accent:#1f5f54; --accent-soft:#e7efe9; --muted:#6b6f68;
+    --danger:#a23b3b; --warn:#9a6a00; --ok:#2c6e3f;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family: ui-sans-serif, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    padding:28px 20px 60px;
-  }
-  .app{max-width:1180px;margin:0 auto;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,"Helvetica Neue",Helvetica,Arial,sans-serif;padding:28px 20px 60px;}
+  .app{max-width:1280px;margin:0 auto;}
   .app-header{margin-bottom:22px;}
-  .app-header h1{
-    font-size:1.5rem;
-    margin:0 0 4px;
-    letter-spacing:-0.01em;
-  }
-  .app-header p{
-    margin:0;
-    color:var(--muted);
-    font-size:0.92rem;
-    max-width:640px;
-    line-height:1.45;
-  }
-  .layout{
-    display:grid;
-    grid-template-columns: minmax(360px, 460px) 1fr;
-    gap:24px;
-    align-items:start;
-  }
-  @media (max-width: 920px){
-    .layout{grid-template-columns: 1fr;}
-  }
-  .panel{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:18px;
-  }
-  .panel h2{
-    font-size:0.78rem;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-    color:var(--muted);
-    margin:0 0 12px;
-    font-weight:700;
-  }
-  .field-row{display:flex;gap:10px;margin-bottom:10px;}
-  .field{flex:1;display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
-  .field label{font-size:0.78rem;color:var(--muted);}
-  .field input[type="text"],
-  .field input[type="number"],
-  .field select,
-  .field textarea{
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:7px 9px;
-    font-size:0.88rem;
-    font-family:inherit;
-    background:#fff;
-    color:var(--ink);
-    width:100%;
-  }
+  .app-header h1{font-size:1.5rem;margin:0 0 4px;letter-spacing:-0.01em;}
+  .app-header p{margin:0;color:var(--muted);font-size:0.92rem;max-width:760px;line-height:1.45;}
+  .layout{display:grid;grid-template-columns:minmax(380px,500px) 1fr;gap:24px;align-items:start;}
+  @media (max-width:980px){.layout{grid-template-columns:1fr;}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;}
+  .panel h2{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin:0 0 12px;font-weight:700;}
+  .field-row{display:flex;gap:10px;}
+  .field{flex:1;display:flex;flex-direction:column;gap:4px;margin-bottom:10px;min-width:0;}
+  .field label{font-size:0.76rem;color:var(--muted);}
+  .field input,.field select,.field textarea{border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:0.88rem;
+    font-family:inherit;background:#fff;color:var(--ink);width:100%;}
   .field textarea{resize:vertical;min-height:54px;}
+  .hint{font-size:0.74rem;color:var(--muted);line-height:1.4;}
   .section-gap{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
-  .row-card{
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:12px;
-    margin-bottom:10px;
-    position:relative;
-    background:#fbfbfa;
-  }
-  .row-card-top{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;}
-  .row-card-top .field{margin-bottom:0;}
-  .row-grid{display:grid;grid-template-columns: 1fr 90px 110px;gap:8px;}
-  .row-grid .field{margin-bottom:0;}
-  .row-remove{
-    background:none;border:none;color:var(--danger);cursor:pointer;
-    font-size:0.78rem;padding:4px 6px;border-radius:6px;
-  }
-  .row-remove:hover{background:#f4e6e6;}
-  .check-line{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);margin-top:6px;flex-wrap:wrap;}
-  .check-line label{display:flex;align-items:center;gap:5px;}
-  .dv-hint{font-size:0.74rem;color:var(--accent);min-height:14px;}
-  .btn{
-    appearance:none;border:none;cursor:pointer;
-    font-family:inherit;font-size:0.85rem;font-weight:600;
-    padding:9px 14px;border-radius:7px;
-  }
-  .btn-add{
-    width:100%;background:var(--accent-soft);color:var(--accent);
-    border:1px dashed var(--accent);
-  }
+  .seg{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+  .seg button{flex:1;min-width:140px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:8px;
+    font:inherit;font-size:0.8rem;cursor:pointer;text-align:left;line-height:1.3;}
+  .seg button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600;}
+  .row-card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px;background:#fbfbfa;}
+  .row-card.b3{background:#f7f7fb;}
+  .row-card-top{display:flex;gap:6px;align-items:center;margin-bottom:8px;}
+  .row-card-top .num{font-size:0.75rem;color:var(--muted);font-weight:700;min-width:20px;}
+  .row-card-top .spacer{flex:1;}
+  .icon-btn{background:none;border:1px solid var(--line);color:var(--ink);cursor:pointer;font-size:0.75rem;padding:3px 7px;border-radius:6px;}
+  .icon-btn:hover{background:#efefec;}
+  .icon-btn.danger{color:var(--danger);border-color:#ecd3d3;}
+  .grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;}
+  .grid3{display:grid;grid-template-columns:1fr 110px 1fr;gap:8px;}
+  .grid4{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:8px;}
+  .grid2 .field,.grid3 .field,.grid4 .field{margin-bottom:6px;}
+  .dv-calc{font-size:0.75rem;color:var(--accent);min-height:15px;margin-top:2px;}
+  .btn{appearance:none;border:none;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:600;padding:9px 14px;border-radius:7px;}
+  .btn-add{width:100%;background:var(--accent-soft);color:var(--accent);border:1px dashed var(--accent);}
   .btn-add:hover{background:#dcebe3;}
-  .btn-primary{
-    background:var(--ink);color:#fff;width:100%;
-    margin-top:10px;
-  }
+  .btn-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .btn-row .btn{flex:1;}
+  .btn-primary{background:var(--ink);color:#fff;}
   .btn-primary:hover{background:#262626;}
   .btn-primary:disabled{background:#7a7a7a;cursor:wait;}
-  .btn-secondary{
-    background:#fff;color:var(--ink);border:1px solid var(--line);
-    width:100%;margin-top:8px;
-  }
+  .btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line);}
   .btn-secondary:hover{background:#f1f1ef;}
-  .preview-wrap{position:sticky;top:20px;display:flex;flex-direction:column;align-items:center;gap:14px;}
-  .size-controls{
-    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-    font-size:0.8rem;color:var(--muted);width:100%;
-  }
-  .size-controls .field{flex:0 0 auto;width:120px;margin-bottom:0;}
-  #labelHolder{
-    background:#e7e7e3;
-    padding:24px;
-    border-radius:10px;
-    display:flex;
-    justify-content:center;
-    width:100%;
-    overflow:auto;
-  }
-  /* ---------- THE LABEL ITSELF ---------- */
-  .label{
-    background:var(--paper);
-    color:#000;
-    border:2.4px solid #000;
-    padding:14px 16px 16px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
-  .label-title{
-    font-weight:900;
-    font-size:2.2em;
-    letter-spacing:-0.015em;
-    line-height:1;
-    margin:0 0 10px;
-  }
-  .label-serving div{
-    font-size:0.85em;
-    line-height:1.5;
-  }
-  .bar-thick{
-    background:#000;
-    height:9px;
-    margin:7px 0;
-  }
-  .label-headers{
-    display:flex;
-    align-items:flex-end;
-    padding-bottom:3px;
-  }
-  .label-headers .col-name{flex:1;}
-  .label-headers .col-amt,
-  .label-headers .col-dv{
-    text-align:right;
-    font-weight:700;
-    font-size:0.78em;
-    line-height:1.25;
-  }
-  .col-amt{width:34%;}
-  .col-dv{width:22%;}
-  .nrow{
-    display:flex;
-    align-items:flex-start;
-    padding:6px 0;
-    border-top:1px solid #bbb;
-  }
-  .nrow:first-child{border-top:none;}
-  .nrow .col-name{flex:1;padding-right:8px;}
-  .nrow .nname{font-size:0.92em;line-height:1.3;}
-  .nrow .nmod{font-size:0.84em;font-style:italic;line-height:1.3;}
-  .nrow.indent .nname{padding-left:18px;}
-  .nrow .col-amt{width:34%;text-align:right;font-size:0.92em;align-self:center;}
-  .nrow .col-dv{width:22%;text-align:right;font-size:0.92em;align-self:center;}
-  .label-footnote{
-    font-size:0.78em;
-    line-height:1.5;
-    margin-top:8px;
-    white-space:pre-line;
-  }
-  .label-other{
-    font-size:0.85em;
-    line-height:1.5;
-    margin-top:14px;
-    max-width: var(--lw, 360px);
-  }
-  .label-other b{font-weight:700;}
-  .fda-note{
-    font-size:0.76rem;
-    color:var(--muted);
-    max-width:380px;
-    text-align:center;
-    line-height:1.5;
-  }
-  .status-msg{
-    font-size:0.78rem;
-    text-align:center;
-    min-height:16px;
-    color:var(--muted);
-  }
+  .preview-wrap{position:sticky;top:20px;display:flex;flex-direction:column;gap:14px;}
+  .ctrl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  @media (max-width:620px){.ctrl-grid{grid-template-columns:1fr 1fr;}}
+  #labelHolder{background:#e4e5e0;padding:24px;border-radius:10px;overflow:auto;display:flex;justify-content:center;}
+  #zoomBox{transform-origin:top center;}
+  .meta{font-size:0.78rem;color:var(--muted);text-align:center;}
+  .status-msg{font-size:0.8rem;text-align:center;min-height:16px;color:var(--muted);}
   .status-msg.error{color:var(--danger);}
+  .checks{list-style:none;margin:0;padding:0;font-size:0.82rem;line-height:1.4;}
+  .checks li{padding:5px 0 5px 22px;position:relative;border-top:1px solid #efefec;}
+  .checks li:first-child{border-top:none;}
+  .checks li::before{position:absolute;left:0;top:5px;font-weight:700;}
+  .checks li.ok::before{content:"✓";color:var(--ok);}
+  .checks li.warn::before{content:"!";color:var(--warn);}
+  .checks li.err::before{content:"✕";color:var(--danger);}
+  .checks li.err{color:var(--danger);}
+  .disclaimer{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+
+  /* ============ THE LABEL (all physical units: pt / in) ============
+     Geometry measured from FDA's high-resolution Supplement Facts examples:
+     box rule 1 pt · heavy bar 6.4 pt · light bar 2.75 pt · hairlines 0.25 pt
+     body 8 pt Helvetica-style · column headings & footnotes 6 pt Black/Regular
+     row pitch 12 pt (8 pt type, ≥1 pt leading, hairline centered between rows) */
+  .sf-wrap{background:#fff;color:#000;}
+  .sf{
+    --s:8pt; --h:6pt; --k:1;             /* body size, heading size, bar scale */
+    --font:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --amtW:60pt; --dvW:48pt;
+    background:#fff;color:#000;border:1pt solid #000;
+    padding:2pt 3.5pt 3pt;
+    font-family:var(--font);font-size:var(--s);line-height:calc(var(--s) + 1pt);
+    -webkit-font-smoothing:antialiased;
+  }
+  .sf *{box-sizing:border-box;}
+  .sf-title{display:block;white-space:nowrap;font-weight:900;line-height:1;margin:0 0 calc(3pt * var(--k));letter-spacing:-0.01em;}
+  .sf-title span{display:inline-block;}
+  .sf-serv div{line-height:calc(var(--s) * 1.125);}
+  .bar-heavy{height:calc(6.4pt * var(--k));background:#000;}
+  .bar-light{height:calc(2.75pt * var(--k));background:#000;}
+  .sf-serv + .bar-heavy{margin-top:calc(1.5pt * var(--k));}
+  .sf-head{display:grid;align-items:end;font-size:var(--h);font-weight:900;line-height:calc(var(--h) + 1pt);
+    padding:calc(1.5pt * var(--k)) 0;}
+  .sf-head .h-amt,.sf-head .h-dv{text-align:center;}
+  .sf-row{display:grid;position:relative;align-items:start;padding:calc(var(--s) * .1875) 0;}
+  .sf-row::after{content:"";position:absolute;left:var(--ind,0);right:0;bottom:0;height:0.25pt;background:#000;}
+  .sf-row.last::after{display:none;}
+  .sf-group .sf-row:first-child{padding-top:calc(var(--s) * .1875 + 2pt * var(--k));}
+  .sf-row .c-name{min-width:0;overflow-wrap:anywhere;word-break:break-word;padding-left:var(--ind,0pt);padding-right:6pt;}
+  .sf-row .c-src{display:block;}
+  .sf-other{overflow-wrap:anywhere;}
+  .sf-row .c-name sub{font-size:.6em;vertical-align:-0.1em;line-height:0;}
+  .sf-row .c-amt,.sf-row .c-dv{white-space:nowrap;}
+  /* standard layout: name | amount (right) | %DV (right) */
+  .lay-std .sf-head,.lay-std .sf-row{grid-template-columns:minmax(0,1fr) var(--amtW) var(--dvW);}
+  .lay-std .c-amt{text-align:right;position:relative;}
+  .lay-std .amt-extra{position:absolute;left:100%;top:0;padding-left:3pt;}
+  .amt-note{display:flex;justify-content:flex-end;white-space:nowrap;}   /* long 2nd line overflows to the left, like FDA (i) */
+  .lay-dual .amt-note{justify-content:flex-start;}
+  .lay-std .c-dv{text-align:right;padding-right:2pt;}
+  .c-dv .sym{display:inline-block;width:var(--symW,0);text-align:left;padding-left:0.5pt;}
+  .sf-blend{grid-column:1 / 3;padding-left:calc(var(--ind,0pt) + 8pt);padding-right:4pt;min-width:0;overflow-wrap:anywhere;}
+  .lay-std .sf-head .h-dv{padding-left:4pt;}
+  /* dual layout: name | amount (left) | %DV children | %DV adults (centered) */
+  .lay-dual .sf-head,.lay-dual .sf-row{grid-template-columns:minmax(0,1fr) var(--amtW) var(--dvW) var(--dvW);}
+  .lay-dual .sf-head .h-amtps{grid-column:1 / span 2;text-align:left;}
+  .lay-dual .c-amt{text-align:left;padding-left:2pt;}
+  .lay-dual .c-dv{text-align:center;}
+  .sf-foot{font-size:var(--h);line-height:calc(var(--h) + 1.2pt);padding-top:calc(3pt * var(--k));}
+  .sf-foot div{padding-left:7pt;text-indent:-7pt;}
+  .sf-other{font-family:var(--font);font-size:var(--s);line-height:calc(var(--s) * 1.2);margin-top:calc(var(--s) * .6);color:#000;}
 </style>
 </head>
 <body>
 <div class="app">
 
   <div class="app-header">
-    <h1>Конструктор этикетки Supplement Facts</h1>
-    <p>Заполняйте состав слева — этикетка справа обновляется автоматически и сохраняет формат, шрифты и линии, рекомендованные FDA (21 CFR 101.36). По готовности скачайте PDF в реальном размере.</p>
+    <h1>Supplement Facts Label Builder</h1>
+    <p>Fill in the formula on the left; the label on the right updates live in the standard FDA layout. Line weights, type sizes, row pitch and indents follow 21 CFR 101.36(e) and match FDA's high-resolution Supplement Facts examples. Export a print-ready PDF or PNG at true physical size.</p>
   </div>
 
   <div class="layout">
 
-    <!-- EDITOR -->
+    <!-- ================= EDITOR ================= -->
     <div class="panel">
-      <h2>Параметры порции</h2>
-      <div class="field-row">
-        <div class="field">
-          <label>Serving Size (размер порции)</label>
-          <input type="text" id="servingSize" value="1 Capsules">
-        </div>
-        <div class="field">
-          <label>Servings Per Container</label>
-          <input type="text" id="servingsPerContainer" placeholder="оставьте пустым для «___»">
-        </div>
-      </div>
 
-      <div class="section-gap">
-        <h2>Состав (ингредиенты)</h2>
-        <div id="rowsContainer"></div>
-        <button class="btn btn-add" id="addRowBtn">+ Добавить ингредиент</button>
-      </div>
-
-      <div class="section-gap">
-        <h2>Сноска (footnote)</h2>
-        <div class="field">
-          <textarea id="footnote">**Daily Value not established</textarea>
-        </div>
-      </div>
-
-      <div class="section-gap">
-        <h2>Other ingredients</h2>
-        <div class="field">
-          <textarea id="otherIngredients">Capsule (vegetable cellulose or gelatine), Magnesium stearate</textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- PREVIEW -->
-    <div class="preview-wrap">
-
-      <div class="panel" style="width:100%;">
-        <h2>Размер этикетки и страницы</h2>
-        <div class="size-controls">
+      <div>
+        <h2>Serving information</h2>
+        <div class="field-row">
           <div class="field">
-            <label>Ширина этикетки, дюймы</label>
-            <input type="number" id="widthIn" value="5" step="0.1" min="1.5" max="6">
+            <label>Serving Size</label>
+            <input type="text" id="servingSize">
           </div>
           <div class="field">
-            <label>Формат страницы PDF</label>
-            <select id="pageFormat">
-              <option value="a4">A4</option>
-              <option value="letter">Letter</option>
+            <label>Servings Per Container</label>
+            <input type="text" id="servingsPerContainer" placeholder="e.g. 60">
+          </div>
+        </div>
+        <div class="field" style="margin-top:-4px;">
+          <label style="display:flex;gap:6px;align-items:center;"><input type="checkbox" id="spcShow" style="width:auto;"> Show "Servings Per Container" line (uncheck only if the count is given in the net quantity statement)</label>
+        </div>
+        <div class="field">
+          <label>Amount column heading</label>
+          <input type="text" id="amountHeading" placeholder="Amount Per Serving">
+          <span class="hint">Allowed variants: "Amount Per Serving", "Amount Per Capsule", "Amount Per Tablet", "Amount Per 2 Tablets", etc.</span>
+        </div>
+      </div>
+
+      <div class="section-gap">
+        <h2>Dietary ingredients</h2>
+        <div class="hint" style="margin-bottom:10px;">
+          <b>With %DV — (b)(2)</b>: nutrients that have a Daily Value (vitamins, minerals, calories, fat, carbs…). List them first, in FDA order.<br>
+          <b>No DV — (b)(3)</b>: other dietary ingredients (herbs, amino acids, blends, source compounds). They get the "†" symbol and are separated from (b)(2) by a heavy bar.
+        </div>
+        <div id="rowsContainer"></div>
+        <button class="btn btn-add" id="addRowBtn">+ Add ingredient</button>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="sortBtn">Sort (b)(2) into FDA order</button>
+        </div>
+      </div>
+
+      <div class="section-gap">
+        <h2>Footnotes</h2>
+        <div class="hint" style="margin-bottom:8px;">Required footnotes are generated automatically from the symbols used on the label ("* Percent Daily Values are based on a 2,000 calorie diet.", "† Daily Value not established.").</div>
+        <div class="field">
+          <label>Additional footnote text (optional)</label>
+          <textarea id="footExtra" placeholder="e.g. a per-day statement"></textarea>
+        </div>
+      </div>
+
+      <div class="section-gap">
+        <h2>Ingredient statement (below the panel)</h2>
+        <div class="field-row">
+          <div class="field" style="flex:0 0 150px;">
+            <label>Heading</label>
+            <select id="otherHeading">
+              <option value="Other ingredients:">Other ingredients:</option>
+              <option value="Ingredients:">Ingredients:</option>
             </select>
           </div>
-          <div class="dv-hint" style="flex:1;min-width:200px;">
-            FDA: минимальная высота строчной буквы «o» — 1/16 дюйма. Ширина этикетки в PDF сохраняется в реальном размере (дюймы), без масштабирования под страницу.
+          <div class="field">
+            <label>Text</label>
+            <textarea id="otherIngredients"></textarea>
           </div>
         </div>
-      </div>
-
-      <div id="labelHolder">
-        <div class="label" id="label"></div>
-      </div>
-
-      <button class="btn btn-primary" id="downloadBtn">⬇️ Скачать PDF</button>
-      <div class="status-msg" id="statusMsg"></div>
-
-      <div class="fda-note">
-        Это конструктор макета, а не юридическая консультация. Перед производством проверьте расчёт %DV, формулировки и финальный размер шрифта у специалиста по регуляторике.
+        <div class="hint">Placed immediately below the Supplement Facts box, outside it (21 CFR 101.4(g)). Use "Ingredients:" when the source compounds are not named in the panel.</div>
       </div>
     </div>
 
+    <!-- ================= PREVIEW ================= -->
+    <div class="preview-wrap">
+
+      <div class="panel">
+        <h2>Size &amp; output</h2>
+        <div class="ctrl-grid">
+          <div class="field">
+            <label>Label width, inches</label>
+            <input type="number" id="widthIn" step="0.05" min="1.5" max="8">
+          </div>
+          <div class="field">
+            <label>Typeface</label>
+            <select id="fontSel">
+              <option value="inter">Inter (embedded)</option>
+              <option value="helv">Helvetica / Arial (system)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>PDF page</label>
+            <select id="pageFormat">
+              <option value="label">Label size (exact)</option>
+              <option value="letter">Letter</option>
+              <option value="a4">A4</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Preview zoom</label>
+            <select id="zoomSel">
+              <option value="1">100% (true size*)</option>
+              <option value="1.5" selected>150%</option>
+              <option value="2">200%</option>
+            </select>
+          </div>
+        </div>
+        <div class="hint">*True size on screen depends on your monitor's DPI; the PDF and PNG are always exact.</div>
+      </div>
+
+      <div id="labelHolder"><div id="zoomBox"><div class="sf-wrap" id="capture"></div></div></div>
+      <div class="meta" id="metaInfo"></div>
+
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" id="downloadBtn">Download PDF</button>
+        <button class="btn btn-secondary" id="pngBtn" style="flex:0 0 auto;">PNG 600 dpi</button>
+      </div>
+      <div class="status-msg" id="statusMsg"></div>
+
+      <div class="panel">
+        <h2>FDA compliance check</h2>
+        <ul class="checks" id="checks"></ul>
+      </div>
+
+      <div class="disclaimer">
+        This is a layout tool, not legal advice. Before printing, have a regulatory specialist confirm the %DV values, ingredient names, claims and the final printed type size.
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- off-screen stage used for exports (no zoom transform) -->
+<div id="stage" style="position:fixed;left:-20000px;top:0;"></div>
+
 <script>
 (function(){
+"use strict";
 
-  let rowId = 2;
-  let state = {
-    rows: [
-      {id:1, name:"Magnesium", modifier:"as magnesium malate", amount:78, unit:"mg", dv:"18%", indent:false},
-      {id:2, name:"Magnesium Malate", modifier:"", amount:500, unit:"mg", dv:"**", indent:false}
-    ]
-  };
+/* ---------- Daily Values: [unit, adults & children ≥4, children 1–3, calorie-based(DRV)] ---------- */
+const DV = {
+  "total fat":["g",78,39,true], "saturated fat":["g",20,10,true], "cholesterol":["mg",300,300,false],
+  "sodium":["mg",2300,1500,false], "total carbohydrate":["g",275,150,true], "dietary fiber":["g",28,14,true],
+  "added sugars":["g",50,25,true], "protein":["g",50,13,true],
+  "vitamin a":["mcg",900,300], "vitamin c":["mg",90,15], "vitamin d":["mcg",20,15], "vitamin e":["mg",15,6],
+  "vitamin k":["mcg",120,30], "thiamin":["mg",1.2,0.5], "riboflavin":["mg",1.3,0.5], "niacin":["mg",16,6],
+  "vitamin b6":["mg",1.7,0.5], "folate":["mcg",400,150], "vitamin b12":["mcg",2.4,0.9], "biotin":["mcg",30,8],
+  "pantothenic acid":["mg",5,2], "calcium":["mg",1300,700], "iron":["mg",18,7], "phosphorus":["mg",1250,460],
+  "iodine":["mcg",150,90], "magnesium":["mg",420,80], "zinc":["mg",11,3], "selenium":["mcg",55,20],
+  "copper":["mg",0.9,0.3], "manganese":["mg",2.3,1.2], "chromium":["mcg",35,11], "molybdenum":["mcg",45,17],
+  "chloride":["mg",2300,1500], "potassium":["mg",4700,3000], "choline":["mg",550,200]
+};
+const ALIAS = {"vitamin b1":"thiamin","vitamin b2":"riboflavin","vitamin b3":"niacin","vitamin b5":"pantothenic acid",
+  "vitamin b7":"biotin","vitamin b9":"folate","folic acid":"folate","carbohydrate":"total carbohydrate","fat":"total fat",
+  "fiber":"dietary fiber","includes":"added sugars"};
+/* Order per 21 CFR 101.36(b)(2)(i)(B) — choline follows potassium, fluoride last (FDA FAQ) */
+const ORDER = ["calories","total fat","saturated fat","trans fat","cholesterol","sodium","total carbohydrate","dietary fiber",
+  "total sugars","added sugars","protein","vitamin a","vitamin c","vitamin d","vitamin e","vitamin k","thiamin","riboflavin",
+  "niacin","vitamin b6","folate","vitamin b12","biotin","pantothenic acid","calcium","iron","phosphorus","iodine","magnesium",
+  "zinc","selenium","copper","manganese","chromium","molybdenum","chloride","potassium","choline","fluoride"];
+const UNITS = ["mg","mcg","g","mcg DFE","IU",""];
+const NA = "†";
 
-  const rowsContainer = document.getElementById('rowsContainer');
-  const labelEl = document.getElementById('label');
-  const statusMsg = document.getElementById('statusMsg');
-
-  function fmtAmount(amount, unit){
-    if(amount === "" || amount === null || amount === undefined || isNaN(amount)) return "";
-    let a = Number(amount);
-    a = Math.round(a*1000)/1000;
-    return a + " " + unit;
+function nutrientKey(name){
+  let n = (name||"").toLowerCase().replace(/[₀-₉]/g,d=>"0123456789"["₀₁₂₃₄₅₆₇₈₉".indexOf(d)]).replace(/\s+/g," ").trim();
+  if(/added sugars/.test(n)) return "added sugars";
+  if(/^total sugars/.test(n)) return "total sugars";
+  let best=null;
+  const keys = ORDER.concat(Object.keys(ALIAS));
+  for(const k of keys){
+    if(n===k || n.startsWith(k+" ") || n.startsWith(k+",") || n.startsWith(k+"(")){
+      if(!best || k.length>best.length) best=k;
+    }
   }
+  return best ? (ALIAS[best]||best) : null;
+}
+function toUnit(val, from, to){
+  const f = from.replace(" DFE",""), t = to.replace(" DFE","");
+  const m = {g:1e6, mg:1e3, mcg:1};
+  if(!(f in m) || !(t in m)) return null;
+  return val*m[f]/m[t];
+}
+function num(v){ const x = parseFloat(String(v).replace(",",".")); return isNaN(x)?null:x; }
 
-  function renderRows(){
-    rowsContainer.innerHTML = "";
-    state.rows.forEach((row) => {
-      const card = document.createElement('div');
-      card.className = 'row-card';
+/* ---------- state ---------- */
+let uid = 0;
+const R = (o)=>Object.assign({id:++uid,name:"",source:"",amount:"",unit:"mg",extra:"",note:"",group:"b2",
+  indent:0,dvMode:"manual",dv:"",dv2:"",blend:""},o);
 
-      card.innerHTML = `
-        <div class="row-card-top">
-          <div class="field" style="flex:2;">
-            <label>Название</label>
-            <input type="text" data-field="name" value="${escapeHtml(row.name)}">
-          </div>
-          <button class="row-remove" data-action="remove">✕ удалить</button>
-        </div>
-        <div class="field" style="margin-bottom:8px;">
-          <label>Пояснение курсивом (необязательно), напр. "as magnesium malate"</label>
-          <input type="text" data-field="modifier" value="${escapeHtml(row.modifier)}">
-        </div>
-        <div class="row-grid">
-          <div class="field">
-            <label>Количество</label>
-            <input type="number" step="any" data-field="amount" value="${row.amount}">
-          </div>
-          <div class="field">
-            <label>Ед.</label>
-            <select data-field="unit">
-              ${["mg","mcg","g","IU","ml"].map(u=>`<option value="${u}" ${row.unit===u?'selected':''}>${u}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field">
-            <label>%DV (вручную)</label>
-            <input type="text" data-field="dv" value="${escapeHtml(row.dv)}" placeholder="напр. 18% или **">
-          </div>
-        </div>
-        <div class="check-line">
-          <label><input type="checkbox" data-field="indent" ${row.indent?'checked':''}> отступ (под-ингредиент / часть смеси)</label>
-        </div>
-      `;
+const DEFAULT = {
+  layout:"std", servingSize:"1 Capsule", spc:"", spcShow:true, amountHeading:"Amount Per Serving",
+  footExtra:"", otherHeading:"Other ingredients:",
+  other:"",
+  widthIn:3, typeScale:"std", font:"inter", page:"label", zoom:1.5,
+  rows:[ R({}) ]
+};
+let S = JSON.parse(JSON.stringify(DEFAULT));
 
-      card.querySelectorAll('[data-field]').forEach(input => {
-        input.addEventListener('input', (e) => {
-          const f = e.target.dataset.field;
-          let val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-          if(e.target.type === 'number' && val !== "") val = parseFloat(val);
-          row[f] = val;
-          renderLabel();
-        });
-        input.addEventListener('change', (e) => {
-          const f = e.target.dataset.field;
-          let val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-          if(e.target.type === 'number' && val !== "") val = parseFloat(val);
-          row[f] = val;
-          renderRows();
-          renderLabel();
-        });
-      });
+/* ---------- %DV (entered manually) ---------- */
+function fmtNum(x){ return String(Math.round(x*1000)/1000); }
+function dvText(row, which){
+  if(row.group==="b3" || row.dvMode==="na") return NA;
+  if(row.dvMode==="blank") return "";
+  if(row.dvMode!=="na" && row.dvMode!=="blank"){
+    let v = (which===1 ? row.dv : (S.layout==="dual" ? row.dv2 : row.dv)) || "";
+    v = v.trim();
+    if(/^\d+(\.\d+)?$/.test(v)) v += "%";
+    return v;
+  }
+  return "";
+}
 
-      card.querySelector('[data-action="remove"]').addEventListener('click', () => {
-        state.rows = state.rows.filter(r => r.id !== row.id);
-        renderRows();
+/* ---------- helpers ---------- */
+const $ = (id)=>document.getElementById(id);
+function esc(s){ return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function nameHtml(n){ return esc(n).replace(/^(Vitamin B)(6|12)\b/i,(m,a,b)=>`${a}<sub>${b}</sub>`); }
+function amtText(row){ return row.amount==="" ? "" : (row.amount + (row.unit ? " "+row.unit : "")); }
+
+/* ---------- editor ---------- */
+const rowsContainer = $("rowsContainer");
+
+function renderRows(){
+  rowsContainer.innerHTML = "";
+  const dual = S.layout==="dual";
+  S.rows.forEach((row, i) => {
+    const card = document.createElement("div");
+    card.className = "row-card" + (row.group==="b3" ? " b3" : "");
+    const b2 = row.group==="b2";
+    card.innerHTML = `
+      <div class="row-card-top">
+        <span class="num">${i+1}</span>
+        <select data-f="group" class="icon-btn" title="Group">
+          <option value="b2" ${b2?"selected":""}>With %DV — (b)(2)</option>
+          <option value="b3" ${!b2?"selected":""}>No DV — (b)(3) †</option>
+        </select>
+        <select data-f="indent" class="icon-btn" title="Indent">
+          <option value="0" ${row.indent==0?"selected":""}>No indent</option>
+          <option value="1" ${row.indent==1?"selected":""}>Indent 1</option>
+          <option value="2" ${row.indent==2?"selected":""}>Indent 2</option>
+        </select>
+        <span class="spacer"></span>
+        <button class="icon-btn" data-a="up" title="Move up">↑</button>
+        <button class="icon-btn" data-a="down" title="Move down">↓</button>
+        <button class="icon-btn danger" data-a="rm" title="Remove">✕</button>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Name</label><input type="text" data-f="name" value="${esc(row.name)}" placeholder="e.g. Magnesium"></div>
+        <div class="field"><label>Source (optional, no brackets needed)</label><input type="text" data-f="source" value="${esc(row.source)}" placeholder="as magnesium malate"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Amount</label><input type="text" inputmode="decimal" data-f="amount" value="${esc(row.amount)}"></div>
+        <div class="field"><label>Unit</label><select data-f="unit">${UNITS.map(u=>`<option value="${u}" ${row.unit===u?"selected":""}>${u||"(none)"}</option>`).join("")}</select></div>
+        <div class="field"><label>Extra after amount</label><input type="text" data-f="extra" value="${esc(row.extra)}" placeholder="(800 IU)"></div>
+      </div>
+      <div class="field" style="margin-bottom:6px;"><label>Blend components (optional) — for a Proprietary Blend, listed in descending order by weight</label><textarea data-f="blend" rows="2" placeholder="Berberine HCl 30:1, Bitter Melon Extract, Turmeric Extract, Ceylon Cinnamon Extract 10:1">${esc(row.blend||"")}</textarea></div>
+      <div class="grid4" ${b2?"":'style="display:none"'}>
+        <div class="field"><label>Second line under amount</label><input type="text" data-f="note" value="${esc(row.note)}" placeholder="(240 mcg folic acid)"></div>
+        <div class="field"><label>%DV mode</label>
+          <select data-f="dvMode">
+            <option value="manual" ${row.dvMode!=="na"&&row.dvMode!=="blank"?"selected":""}>Enter value</option>
+            <option value="na" ${row.dvMode==="na"?"selected":""}>† (no DV)</option>
+            <option value="blank" ${row.dvMode==="blank"?"selected":""}>Blank (Calories)</option>
+          </select></div>
+        <div class="field" ${row.dvMode!=="na"&&row.dvMode!=="blank"?"":'style="visibility:hidden"'}><label>${dual?"%DV children 1–3":"% Daily Value"}</label><input type="text" data-f="dv" value="${esc(row.dv)}" placeholder="19%"></div>
+        <div class="field" ${row.dvMode==="manual"&&dual?"":'style="visibility:hidden"'}><label>%DV adults</label><input type="text" data-f="dv2" value="${esc(row.dv2)}" placeholder="19%"></div>
+      </div>
+      <div class="dv-calc"></div>
+    `;
+    const structural = ["group","indent","dvMode"];
+    card.querySelectorAll("[data-f]").forEach(el=>{
+      el.addEventListener(el.tagName==="SELECT"?"change":"input", e=>{
+        const f = e.target.dataset.f;
+        row[f] = f==="indent" ? parseInt(e.target.value,10) : e.target.value;
+        if(structural.includes(f)) renderRows(); else updateCalc(card,row);
         renderLabel();
       });
-
-      rowsContainer.appendChild(card);
     });
+    card.querySelector('[data-a="rm"]').onclick = ()=>{ S.rows = S.rows.filter(r=>r!==row); renderRows(); renderLabel(); };
+    card.querySelector('[data-a="up"]').onclick = ()=>move(i,-1);
+    card.querySelector('[data-a="down"]').onclick = ()=>move(i,1);
+    updateCalc(card,row);
+    rowsContainer.appendChild(card);
+  });
+}
+function move(i,d){
+  const j=i+d; if(j<0||j>=S.rows.length) return;
+  [S.rows[i],S.rows[j]]=[S.rows[j],S.rows[i]]; renderRows(); renderLabel();
+}
+function updateCalc(card,row){
+  const out = card.querySelector(".dv-calc");
+  if(row.group!=="b2"){ out.textContent = "Shown with † — Daily Value not established."; return; }
+  if(row.dvMode==="na"){ out.textContent = "Shown with † — Daily Value not established."; return; }
+  out.textContent = row.dvMode==="blank" ? "" : "Enter %DV rounded to a whole percent, e.g. 19%. Add * only for calorie-based nutrients (fat, carbs, sugars, fiber, protein).";
+}
+
+/* ---------- label ---------- */
+const capture = $("capture");
+
+function dvCell(t){
+  const m = String(t).match(/^(.*?)(\*{1,2}|†)$/);
+  const pct = m ? m[1] : t, sym = m ? m[2] : "";
+  return `<div class="c-dv"><span class="dvt">${esc(pct)}</span><span class="sym">${esc(sym)}</span></div>`;
+}
+function rowHtml(row, last){
+  const dual = S.layout==="dual";
+  const ind = (row.indent*10)+"pt";
+  // strip any parentheses the user typed, then put the source on its own line under the name
+  let src = String(row.source||"").trim();
+  while(src.startsWith("(") && src.endsWith(")")) src = src.slice(1,-1).trim();
+  const name = nameHtml(row.name) + (src ? `<span class="c-src">(${esc(src)})</span>` : "");
+  const amt = amtText(row);
+  let amtCell;
+  if(dual){
+    amtCell = `<div class="c-amt"><span class="amt-main">${esc(amt)}${row.extra?" "+esc(row.extra):""}</span>${row.note?`<div class="amt-note"><span class="amt-main">${esc(row.note)}</span></div>`:""}</div>`;
+  } else {
+    amtCell = `<div class="c-amt"><span class="amt-main">${esc(amt)}</span>${row.extra?`<span class="amt-extra">${esc(row.extra)}</span>`:""}${row.note?`<div class="amt-note"><span class="amt-main">${esc(row.note)}</span></div>`:""}</div>`;
   }
+  const dvCells = dual
+    ? `<div class="c-dv"><span class="dvt">${esc(dvText(row,1))}</span></div><div class="c-dv"><span class="dvt">${esc(dvText(row,0))}</span></div>`
+    : dvCell(dvText(row,0));
+  const blend = (row.blend||"").trim() ? `<div class="sf-blend">${esc(row.blend.trim())}</div>` : "";
+  return `<div class="sf-row${last?" last":""}" style="--ind:${ind}"><div class="c-name">${name||"&nbsp;"}</div>${amtCell}${dvCells}${blend}</div>`;
+}
 
-  function escapeHtml(str){
-    return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
+function footnotes(){
+  const all = [];
+  S.rows.forEach(r=>{ all.push(dvText(r,0)); if(S.layout==="dual") all.push(dvText(r,1)); });
+  const txt = all.join(" ");
+  const single = /(^|[^*])\*(?!\*)/.test(txt), dbl = /\*\*/.test(txt), na = txt.includes(NA);
+  const f = [];
+  if(single) f.push("* Percent Daily Values are based on a 2,000 calorie diet.");
+  if(dbl) f.push("** Percent Daily Values are based on a 1,000 calorie diet.");
+  if(na) f.push(NA+" Daily Value not established.");
+  (S.footExtra||"").split("\n").map(s=>s.trim()).filter(Boolean).forEach(s=>f.push(s));
+  return f;
+}
 
-  function renderLabel(){
-    const servingSize = document.getElementById('servingSize').value;
-    const spc = document.getElementById('servingsPerContainer').value.trim();
-    const footnote = document.getElementById('footnote').value;
-    const otherIng = document.getElementById('otherIngredients').value;
-    const widthIn = parseFloat(document.getElementById('widthIn').value) || 2.6;
-    const widthPx = Math.round(widthIn * 96);
-
-    labelEl.style.width = widthPx + "px";
-    labelEl.style.setProperty('--lw', (widthPx - 32) + "px");
-
-    let rowsHtml = state.rows.map(row => {
-      return `
-        <div class="nrow ${row.indent ? 'indent':''}">
-          <div class="col-name">
-            <div class="nname">${escapeHtml(row.name) || "&nbsp;"}</div>
-            ${row.modifier ? `<div class="nmod">(${escapeHtml(row.modifier)})</div>` : ""}
-          </div>
-          <div class="col-amt">${fmtAmount(row.amount, row.unit)}</div>
-          <div class="col-dv">${escapeHtml(row.dv)}</div>
-        </div>`;
-    }).join("");
-
-    labelEl.innerHTML = `
-      <div class="label-title">Supplement Facts</div>
-      <div class="label-serving">
-        <div>Serving Size: ${escapeHtml(servingSize)}</div>
-        <div>Servings Per Container: ${spc ? escapeHtml(spc) : "___"}</div>
+function labelHtml(){
+  const dual = S.layout==="dual";
+  const b2 = S.rows.filter(r=>r.group==="b2"), b3 = S.rows.filter(r=>r.group==="b3");
+  const ah = esc(S.amountHeading || "Amount Per Serving");
+  const ahStd = ah.replace(/^Amount\s+/i,"Amount<br>");
+  const head = dual
+    ? `<div class="sf-head"><div class="h-amtps">${ah}</div><div class="h-dv">% Daily Value<br>for Children<br>1 through 3<br>Years of Age</div><div class="h-dv">% Daily Value<br>for Adults and<br>Children 4 or more<br>Years of Age</div></div>`
+    : `<div class="sf-head"><div></div><div class="h-amt">${ahStd}</div><div class="h-dv">% Daily<br>Value</div></div>`;
+  const grp = (rows)=> rows.length ? `<div class="sf-group">${rows.map((r,i)=>rowHtml(r,i===rows.length-1)).join("")}</div><div class="bar-heavy"></div>` : "";
+  const foot = footnotes();
+  return `
+    <div class="sf lay-${S.layout}">
+      <div class="sf-title"><span>Supplement Facts</span></div>
+      <div class="sf-serv">
+        <div>Serving Size ${esc(S.servingSize)}</div>
+        ${S.spcShow ? `<div>Servings Per Container ${S.spc.trim() ? esc(S.spc.trim()) : "___"}</div>` : ""}
       </div>
-      <div class="bar-thick"></div>
-      <div class="label-headers">
-        <div class="col-name"></div>
-        <div class="col-amt">Amount<br>Per Serving</div>
-        <div class="col-dv">% Daily<br>Value</div>
-      </div>
-      <div class="bar-thick"></div>
-      ${rowsHtml}
-      <div class="bar-thick"></div>
-      <div class="label-footnote">${escapeHtml(footnote)}</div>
-      <div class="label-other"><b>Other ingredients:</b> ${escapeHtml(otherIng)}</div>
-    `;
+      <div class="bar-heavy"></div>
+      ${head}
+      <div class="bar-light"></div>
+      ${grp(b2)}
+      ${grp(b3)}
+      ${foot.length ? `<div class="sf-foot">${foot.map(t=>`<div>${esc(t)}</div>`).join("")}</div>` : ""}
+    </div>
+    ${S.other.trim() ? `<div class="sf-other"><b>${esc(S.otherHeading.replace(/:$/,""))}:</b> ${esc(S.other.trim())}</div>` : ""}
+  `;
+}
+
+const SCALE = { std:{s:8,h:6}, inter:{s:6,h:6}, small:{s:4.5,h:4.5} };
+const FONTS = { inter:'"Inter","Helvetica Neue",Helvetica,Arial,sans-serif', helv:'"Helvetica Neue",Helvetica,Arial,sans-serif' };
+
+// Lays out a label inside container `host` (must be attached & unscaled for measuring with offsetWidth)
+function buildInto(host){
+  host.innerHTML = labelHtml();
+  host.style.width = S.widthIn + "in";
+  const sf = host.querySelector(".sf");
+  const sc = SCALE[S.typeScale];
+  sf.style.setProperty("--s", sc.s+"pt");
+  sf.style.setProperty("--h", sc.h+"pt");
+  sf.style.setProperty("--k", sc.s/8);
+  sf.style.setProperty("--font", FONTS[S.font]);
+  host.style.setProperty("--font", FONTS[S.font]);
+  const other = host.querySelector(".sf-other");
+  if(other){ other.style.fontFamily = FONTS[S.font]; other.style.fontSize = sc.s+"pt"; other.style.lineHeight = (sc.s*1.2)+"pt"; other.style.marginTop=(sc.s*.6)+"pt"; }
+
+  // column widths from content (px → pt)
+  const PT = 0.75, w = el=>el.offsetWidth*PT;
+  let amtW = 0, dvW = 0, extraW = 0;
+  sf.querySelectorAll(".c-amt > .amt-main").forEach(e=>amtW=Math.max(amtW,w(e)));
+  sf.querySelectorAll(".amt-extra").forEach(e=>extraW=Math.max(extraW,w(e)));
+  sf.querySelectorAll(".dvt").forEach(e=>dvW=Math.max(dvW,w(e)));
+  let symW = 0; sf.querySelectorAll(".sym").forEach(e=>{ e.style.width="auto"; symW=Math.max(symW,w(e)); e.style.width=""; });
+  sf.style.setProperty("--symW", symW+"pt");
+  const hA = sf.querySelector(".h-amt"); const hD = sf.querySelectorAll(".h-dv");
+  const measure = (el)=>{ const sp=document.createElement("span"); sp.innerHTML=el.innerHTML; sp.style.display="inline-block"; sp.style.whiteSpace="nowrap"; el.textContent=""; el.appendChild(sp); const r=w(sp); el.innerHTML=sp.innerHTML; return r; };
+  let hAW = hA ? measure(hA) : 0, hDW = 0; hD.forEach(e=>hDW=Math.max(hDW,measure(e)));
+  if(S.layout==="dual"){
+    sf.style.setProperty("--amtW", (Math.max(amtW, 40)+10)+"pt");
+    sf.style.setProperty("--dvW", (Math.max(dvW,hDW)+4)+"pt");
+  } else {
+    sf.style.setProperty("--amtW", Math.max(amtW,hAW,40)+"pt");
+    // like FDA (i): ~56 pt between the amount column and the right edge
+    sf.style.setProperty("--dvW", Math.max(hDW+12, dvW+symW+14, extraW+dvW+symW+10, 48)+"pt");
   }
 
-  document.getElementById('addRowBtn').addEventListener('click', () => {
-    rowId++;
-    state.rows.push({id:rowId, name:"", modifier:"", amount:"", unit:"mg", dv:"", indent:false});
-    renderRows();
-    renderLabel();
+  // title: full width of the panel (21 CFR 101.36(e)(1) / Appendix B)
+  const t = sf.querySelector(".sf-title"), ts = t.querySelector("span");
+  t.style.fontSize = "100px";
+  const cs = getComputedStyle(sf);
+  const inner = sf.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const fs = 100 * inner / ts.offsetWidth * 0.995;
+  t.style.fontSize = fs + "px";
+  return {sf, titlePt: fs*PT, inner};
+}
+
+let lastInfo = null;
+function renderLabel(){
+  lastInfo = buildInto(capture);
+  const z = S.zoom;
+  const zb = $("zoomBox");
+  zb.style.transform = `scale(${z})`;
+  zb.style.width = capture.offsetWidth + "px";
+  zb.style.height = capture.offsetHeight + "px";
+  zb.style.marginBottom = (capture.offsetHeight*(z-1)) + "px";
+  zb.style.marginLeft = zb.style.marginRight = (capture.offsetWidth*(z-1)/2) + "px";
+  const hIn = capture.offsetHeight/96, boxIn = lastInfo.sf.offsetHeight/96;
+  $("metaInfo").textContent = `Panel: ${S.widthIn.toFixed(2)} × ${boxIn.toFixed(2)} in (${(S.widthIn*boxIn).toFixed(1)} sq in) · with ingredient statement: ${hIn.toFixed(2)} in tall · title ${lastInfo.titlePt.toFixed(1)} pt`;
+  runChecks();
+}
+
+/* ---------- compliance checks ---------- */
+function runChecks(){
+  const out = [];
+  const add = (cls, msg)=>out.push(`<li class="${cls}">${msg}</li>`);
+  const sc = SCALE[S.typeScale];
+  const ss = S.servingSize.trim();
+
+  add("ok", `Title "Supplement Facts" spans the full panel width at ${lastInfo.titlePt.toFixed(1)} pt — larger than all other text (e)(1).`);
+  add("ok", `Box hairline 1 pt, heavy bars ${(6.4*sc.s/8).toFixed(2)} pt, light bar ${(2.75*sc.s/8).toFixed(2)} pt, 0.25 pt hairline between every ingredient (e)(2), (e)(5)–(e)(7).`);
+  add("ok", "Body text 8 pt, column headings & footnotes 6 pt, ≥1 pt leading (e)(3)–(e)(4).");
+
+  if(!ss) add("err","Serving Size is empty (b)(1).");
+  else if(/^1\s+[A-Za-z]+s\b/.test(ss) && !/^1\s+\w*(ss)\b/i.test(ss)) add("err",`Serving Size "${esc(ss)}" — use the singular for one unit (e.g. "1 Capsule").`);
+  else add("ok","Serving Size present (b)(1).");
+  if(S.spcShow && !S.spc.trim()) add("err","Servings Per Container is empty — enter the number of servings.");
+  if(!S.spcShow) add("warn","Servings Per Container omitted — allowed only if it's stated in the net quantity of contents (e.g. \"60 capsules\").");
+
+  const b2 = S.rows.filter(r=>r.group==="b2"), b3 = S.rows.filter(r=>r.group==="b3");
+  if(!S.rows.length) add("err","No ingredients listed.");
+  S.rows.forEach((r,i)=>{
+    const tag = `Row ${i+1}${r.name?` (${esc(r.name)})`:""}`;
+    if(!r.name.trim()) add("err", `${tag}: name is empty.`);
+    if(r.unit==="IU") add("err", `${tag}: IU is no longer allowed as the main unit — declare in mcg/mg; IU may be added in parentheses.`);
+    const key = nutrientKey(r.name);
+    if(key==="folate" && r.unit && r.unit!=="mcg DFE") add("err", `${tag}: folate must be declared in "mcg DFE"; folic acid may be shown in parentheses.`);
+    if(r.group==="b2" && r.dvMode!=="na" && r.dvMode!=="blank" && !String(r.dv||"").trim())
+      add("err", `${tag}: enter % Daily Value (or choose "† not established").`);
+    if(r.group==="b3" && key && DV[key] && !/\b(malate|citrate|oxide|carbonate|glycinate|chloride|sulfate|gluconate|bisglycinate|picolinate|threonate|taurate|orotate|aspartate|fumarate|phosphate|lactate|selenite|selenate|molybdate)\b/i.test(r.name))
+      add("warn", `${tag}: has an established DV — it should be in the (b)(2) group.`);
+    if(r.group==="b3" && !r.amount && !r.indent) add("warn", `${tag}: (b)(3) ingredients need a quantity per serving (except blend components listed under a proprietary blend).`);
   });
+  // order
+  let lastIdx=-1, bad=null;
+  b2.forEach(r=>{ const k=nutrientKey(r.name); const ix=ORDER.indexOf(k==="added sugars"?"added sugars":k); if(ix<0) return; if(ix<lastIdx && !bad) bad=r.name; lastIdx=Math.max(lastIdx,ix); });
+  if(bad) add("warn", `"${esc(bad)}" is out of FDA order (b)(2)(i)(B). Click "Sort (b)(2) into FDA order".`);
+  else if(b2.length) add("ok","(b)(2) nutrients are in FDA order.");
+  if(b2.length && b3.length) add("ok","Heavy bar separates (b)(2) and (b)(3) ingredients (e)(6).");
+  const f = footnotes();
+  if(f.length) add("ok","Required footnotes generated: "+f.length+".");
+  if(/\bor\b/i.test(S.other)) add("warn","Ingredient statement contains \"or\" (e.g. \"vegetable cellulose or gelatin\") — FDA generally requires the ingredient actually used; alternatives are not permitted here.");
+  if(/gelatine/i.test(S.other)) add("warn","Use the US spelling \"gelatin\".");
+  if(!S.other.trim()) add("warn","No ingredient statement (Other ingredients) — required if the product contains any.");
+  $("checks").innerHTML = out.join("");
+}
 
-  ['servingSize','servingsPerContainer','footnote','otherIngredients','widthIn'].forEach(id => {
-    document.getElementById(id).addEventListener('input', renderLabel);
-  });
+/* ---------- controls ---------- */
+function syncControls(){
+  $("servingSize").value = S.servingSize; $("servingsPerContainer").value = S.spc; $("spcShow").checked = !!S.spcShow;
+  $("amountHeading").value = S.amountHeading; $("footExtra").value = S.footExtra;
+  $("otherHeading").value = S.otherHeading; $("otherIngredients").value = S.other;
+  $("widthIn").value = S.widthIn; $("fontSel").value = S.font;
+  $("pageFormat").value = S.page; $("zoomSel").value = String(S.zoom);
+}
+const bind = (id,key,parse)=>$(id).addEventListener("input",e=>{ S[key]= parse?parse(e.target.value):e.target.value; renderLabel(); });
+bind("servingSize","servingSize"); bind("servingsPerContainer","spc"); bind("amountHeading","amountHeading");
+bind("footExtra","footExtra"); bind("otherIngredients","other");
+bind("widthIn","widthIn",v=>Math.min(8,Math.max(1.5,parseFloat(v)||3)));
+["otherHeading","fontSel","pageFormat","zoomSel"].forEach(id=>$(id).addEventListener("change",e=>{
+  const map={otherHeading:"otherHeading",fontSel:"font",pageFormat:"page",zoomSel:"zoom"};
+  S[map[id]] = id==="zoomSel" ? parseFloat(e.target.value) : e.target.value; renderLabel();
+}));
+$("spcShow").addEventListener("change",e=>{ S.spcShow=e.target.checked; renderLabel(); });
+$("addRowBtn").onclick = ()=>{ S.rows.push(R({})); renderRows(); renderLabel(); };
+$("sortBtn").onclick = ()=>{
+  const b2 = S.rows.filter(r=>r.group==="b2"), b3 = S.rows.filter(r=>r.group==="b3");
+  const ix = r=>{ const i=ORDER.indexOf(nutrientKey(r.name)); return i<0?999:i; };
+  b2.sort((a,b)=>ix(a)-ix(b));  // stable sort keeps unknowns in place relative to each other
+  S.rows = b2.concat(b3); renderRows(); renderLabel();
+};
 
-  // ---------- PDF DOWNLOAD (client-side, no window.open) ----------
-  // Renders the label into a canvas and drops it into a jsPDF document
-  // at its true physical size (based on the width-in-inches field),
-  // then triggers a normal browser download. This avoids window.open()/
-  // document.write(), which get blocked or stripped of styles inside
-  // sandboxed iframe environments (that's what caused the broken,
-  // unstyled print output before).
-  const downloadBtn = document.getElementById('downloadBtn');
+/* ---------- export ---------- */
+const statusMsg = $("statusMsg");
+const DPI = 600;
+async function renderCanvas(){
+  const stage = $("stage");
+  stage.innerHTML = '<div class="sf-wrap"></div>';
+  const host = stage.firstChild;
+  buildInto(host);
+  if(document.fonts && document.fonts.ready) await document.fonts.ready;
+  const canvas = await html2canvas(host, {scale: DPI/96, backgroundColor:"#ffffff", useCORS:true, logging:false});
+  const wIn = S.widthIn, hIn = wIn * canvas.height / canvas.width;
+  stage.innerHTML = "";
+  return {canvas, wIn, hIn};
+}
+function guardLibs(needPdf){
+  if(typeof html2canvas==="undefined" || (needPdf && typeof window.jspdf==="undefined")){
+    statusMsg.textContent = "Export libraries didn't load (offline?). Reload the page and try again.";
+    statusMsg.classList.add("error"); return false;
+  }
+  return true;
+}
+async function withBusy(btn, label, fn){
+  btn.disabled = true; const t = btn.textContent; btn.textContent = label;
+  statusMsg.textContent = ""; statusMsg.classList.remove("error");
+  try{ await fn(); } catch(err){ statusMsg.textContent = "Export failed: " + err.message; statusMsg.classList.add("error"); }
+  finally{ btn.disabled = false; btn.textContent = t; }
+}
+$("downloadBtn").onclick = ()=>{ if(!guardLibs(true)) return; withBusy($("downloadBtn"),"Preparing PDF…", async ()=>{
+  const {canvas, wIn, hIn} = await renderCanvas();
+  const img = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  let doc, x, y;
+  if(S.page==="label"){
+    const m = 0.125; const pw = wIn+2*m, ph = hIn+2*m;
+    doc = new jsPDF({unit:"in", format:[pw,ph], orientation: pw>ph?"landscape":"portrait"});
+    x = m; y = m;
+  } else {
+    doc = new jsPDF({unit:"in", format:S.page});
+    const pw = doc.internal.pageSize.getWidth(), m = 0.5;
+    if(wIn > pw-2*m){ statusMsg.textContent = "Warning: the label is wider than the printable area of this page. Choose \"Label size\" or reduce width."; statusMsg.classList.add("error"); }
+    x = Math.max(m,(pw-wIn)/2); y = m;
+  }
+  doc.addImage(img, "PNG", x, y, wIn, hIn, undefined, "FAST");   // exact physical size, no scaling
+  doc.save("supplement-facts-label.pdf");
+  if(!statusMsg.textContent) statusMsg.textContent = `PDF saved: ${wIn.toFixed(2)} × ${hIn.toFixed(2)} in at ${DPI} dpi. Print at 100% / "Actual size".`;
+});};
+$("pngBtn").onclick = ()=>{ if(!guardLibs(false)) return; withBusy($("pngBtn"),"Rendering…", async ()=>{
+  const {canvas, wIn, hIn} = await renderCanvas();
+  const blob = await new Promise(res=>canvas.toBlob(res,"image/png"));
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "supplement-facts-label-600dpi.png";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  statusMsg.textContent = `PNG saved: ${canvas.width} × ${canvas.height} px = ${wIn.toFixed(2)} × ${hIn.toFixed(2)} in at ${DPI} dpi.`;
+});};
 
-  downloadBtn.addEventListener('click', async () => {
-    if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-      statusMsg.textContent = 'Библиотеки PDF не загрузились (нет сети?). Обновите страницу и попробуйте снова.';
-      statusMsg.classList.add('error');
-      return;
-    }
-
-    downloadBtn.disabled = true;
-    const originalText = downloadBtn.textContent;
-    downloadBtn.textContent = 'Готовим PDF…';
-    statusMsg.textContent = '';
-    statusMsg.classList.remove('error');
-
-    try {
-      const widthIn = parseFloat(document.getElementById('widthIn').value) || 2.6;
-
-      // Render at high resolution for crisp print quality
-      const canvas = await html2canvas(labelEl, {
-        scale: 4,
-        backgroundColor: '#ffffff',
-        useCORS: true
-      });
-      const imgData = canvas.toDataURL('image/png');
-
-      const pageFormat = document.getElementById('pageFormat').value; // 'a4' | 'letter'
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: pageFormat === 'a4' ? 'a4' : 'letter' });
-
-      const pageWidthMm = doc.internal.pageSize.getWidth();
-      const marginMm = 12;
-
-      // Keep the label at its TRUE physical size (widthIn inches),
-      // not scaled to fill the page — this matters for FDA minimum
-      // font-height compliance.
-      const imgWidthMm = widthIn * 25.4;
-      const imgHeightMm = imgWidthMm * (canvas.height / canvas.width);
-
-      if (imgWidthMm > pageWidthMm - marginMm * 2) {
-        statusMsg.textContent = 'Внимание: ширина этикетки больше печатной области страницы — уменьшите ширину или проверьте поля при печати.';
-        statusMsg.classList.add('error');
-      }
-
-      const x = Math.max(marginMm, (pageWidthMm - imgWidthMm) / 2);
-      const y = marginMm;
-
-      doc.addImage(imgData, 'PNG', x, y, imgWidthMm, imgHeightMm);
-      doc.save('supplement-facts-label.pdf');
-    } catch (err) {
-      statusMsg.textContent = 'Не удалось создать PDF: ' + err.message;
-      statusMsg.classList.add('error');
-    } finally {
-      downloadBtn.disabled = false;
-      downloadBtn.textContent = originalText;
-    }
-  });
-
-  renderRows();
-  renderLabel();
+/* ---------- init ---------- */
+syncControls(); renderRows(); renderLabel();
+if(document.fonts){ document.fonts.ready.then(renderLabel); document.fonts.addEventListener && document.fonts.addEventListener("loadingdone", renderLabel); }
 })();
 </script>
 </body>
